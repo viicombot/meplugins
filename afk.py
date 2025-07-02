@@ -10,6 +10,15 @@ from utils.database import dB, cleanmode, cleanmode_on, cleanmode_off
 from utils.decorators import language
 from strings import command
 
+__MODULE__ = "Afk"
+__HELP__ = """
+• /afk [reason optional] - Afk from the chat.
+
+You can use sticker/foto/video.
+"""
+
+
+
 async def put_cleanmode(chat_id, message_id):
     if chat_id not in cleanmode:
         cleanmode[chat_id] = []
