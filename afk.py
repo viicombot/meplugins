@@ -120,73 +120,8 @@ async def active_afk(client, message, _):
     )
     await put_cleanmode(message.chat.id, send.id)
 
-@app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=3)
-@language
-async def afk_watcher_func(client, message, _):
-    if message.sender_chat:
-        return
 
-    async def handle_afk_user(user_id, user_mention):
-        msg = ""
-        verifier= await dB.get_var(user_id, "AFK")
-        if not verifier:
-            return msg, None
-        try:
-            afktype = verifier["type"]
-            timeafk = verifier["time"]
-            data = verifier["data"]
-            reasonafk = verifier["reason"]
-            seenago = get_readable_time(int(time.time() - timeafk))
-            caption = format_afk_caption(afktype, user_mention, seenago, reasonafk, _)
-            if afktype in ["animation", "photo", "video"]:
-                send = await reply_afk_message(message, afktype, data, caption, user_id)
-            else:
-                msg += caption
-                send = None
-            return msg, send
-        except:
-            return _["afk_4"].format(a=user_mention), None
-
-    text = message.text or message.caption or ""
-    all_mentions = set()
-    if message.entities:
-        for entity in message.entities:
-            if entity.type in [enums.MessageEntityType.MENTION, enums.MessageEntityType.TEXT_MENTION]:
-                try:
-                    if entity.type == enums.MessageEntityType.MENTION:
-                        username = text[entity.offset + 1 : entity.offset + entity.length]
-                        user = await app.get_users(username)
-                    else:
-                        user = entity.user
-                    all_mentions.add((user.id, user.first_name[:25]))
-                except:
-                    continue
-
-    replied_user = message.reply_to_message.from_user if message.reply_to_message and message.reply_to_message.from_user else None
-    if replied_user:
-        all_mentions.add((replied_user.id, replied_user.first_name[:25]))
-
-    afk_messages = []
-    send_msg = None
-    for uid, uname in all_mentions:
-        msg, send = await handle_afk_user(uid, uname)
-        if msg:
-            afk_messages.append(msg)
-        if send:
-            send_msg = send
-
-    if afk_messages:
-        try:
-            msg_sent = await message.reply_text("\n".join(afk_messages), disable_web_page_preview=True)
-            await put_cleanmode(message.chat.id, msg_sent.id)
-        except:
-            pass
-    elif send_msg:
-        try:
-            await put_cleanmode(message.chat.id, send_msg.id)
-        except:
-            pass
-
+    
 @app.on_message(command("AFKDEL_COMMAND") & filters.group)
 @language
 async def afkdel_state(client, message, _):
@@ -204,4 +139,336 @@ async def afkdel_state(client, message, _):
         await message.reply_text(_["afk_7"])
     else:
         await message.reply_text(_["afk_5"].format(message.command[0]))
+
+
+@app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=3)
+@language
+async def afk_watcher_func(client, message, _):
+    if message.sender_chat:
+        return
+    if message.sender_chat:
+        return
+    userid = message.from_user.id
+    user_name = message.from_user.mention
+    if message.entities:
+        possible = ["/afk", f"/afk@{client.me.username}", "!afk"]
+        message_text = message.text or message.caption
+        for entity in message.entities:
+            if entity.type == enums.MessageEntityType.BOT_COMMAND:
+                if (message_text[0 : 0 + entity.length]).lower() in possible:
+                    return
+
+    msg = ""
+    replied_user_id = 0
+
+    # client AFK
+    verifier = await dB.get_var(user_id, "AFK")
+    if verifier:
+        try:
+            afktype = verifier["type"]
+            timeafk = verifier["time"]
+            data = verifier["data"]
+            reasonafk = verifier["reason"]
+            seenago = get_readable_time((int(time.time() - timeafk)))
+            if afktype == "text":
+                msg += _["afk_2"].format(a=user_name, b=seenago)
+            if afktype == "text_reason":
+                msg += _["afk_3"].format(a=user_name, b=seenago, c=reasonafk)
+            if afktype == "animation":
+                if str(reasonafk) == "None":
+                    send = await message.reply_animation(
+                        data,
+                        caption=_["afk_2"].format(a=user_name, b=seenago),
+                    )
+                else:
+                    send = await message.reply_animation(
+                        data,
+                        caption=_["afk_3"].format(a=user_name, b=seenago, c=reasonafk),
+                    )
+            if afktype == "photo":
+                if str(reasonafk) == "None":
+                    send = await message.reply_photo(
+                        photo=f"downloads/{userid}.jpg",
+                        caption=_["afk_2"].format(a=user_name, b=seenago),
+                    )
+                else:
+                    send = await message.reply_photo(
+                        photo=f"downloads/{userid}.jpg",
+                        caption=_["afk_3"].format(a=user_name, b=seenago, c=reasonafk),
+                    )
+
+            if afktype == "video":
+                if str(reasonafk) == "None":
+                    send = await message.reply_video(
+                        video=f"downloads/{userid}.mp4",
+                        caption=_["afk_2"].format(a=user_name, b=seenago),
+                    )
+                else:
+                    send = await message.reply_video(
+                        video=f"downloads/{userid}.mp4",
+                        caption=_["afk_3"].format(a=user_name, b=seenago, c=reasonafk),
+                    )
+        except:
+            msg += _["afk_4"].format(a=user_name)
+
+    if message.reply_to_message:
+        try:
+            replied_first_name = message.reply_to_message.from_user.mention
+            replied_user_id = message.reply_to_message.from_user.id
+            verifier = await dB.get_var(replied_user_id, "AFK")
+            if verifier:
+                try:
+                    afktype = verifier["type"]
+                    timeafk = verifier["time"]
+                    data = verifier["data"]
+                    reasonafk = verifier["reason"]
+                    seenago = get_readable_time((int(time.time() - timeafk)))
+                    if afktype == "text":
+                        msg += _["afk_8"].format(a=replied_first_name, b=seenago)
+                    if afktype == "text_reason":
+                        msg += _["afk_10"].format(
+                            a=replied_first_name, b=seenago, c=reasonafk
+                        )
+                    if afktype == "animation":
+                        if str(reasonafk) == "None":
+                            send = await message.reply_animation(
+                                data,
+                                caption=_["afk_8"].format(
+                                    a=replied_first_name, b=seenago
+                                ),
+                            )
+                        else:
+                            send = await message.reply_animation(
+                                data,
+                                caption=_["afk_10"].format(
+                                    a=replied_first_name, b=seenago, c=reasonafk
+                                ),
+                            )
+                    if afktype == "photo":
+                        if str(reasonafk) == "None":
+                            send = await message.reply_photo(
+                                photo=f"downloads/{replied_user_id}.jpg",
+                                caption=_["afk_8"].format(
+                                    a=replied_first_name,
+                                    b=seenago,
+                                ),
+                            )
+                        else:
+                            send = await message.reply_photo(
+                                photo=f"downloads/{replied_user_id}.jpg",
+                                caption=_["afk_10"].format(
+                                    a=replied_first_name,
+                                    b=seenago,
+                                    c=reasonafk,
+                                ),
+                            )
+                    if afktype == "video":
+                        if str(reasonafk) == "None":
+                            send = await message.reply_video(
+                                video=f"downloads/{replied_user_id}.mp4",
+                                caption=_["afk_8"].format(
+                                    a=replied_first_name,
+                                    b=seenago,
+                                ),
+                            )
+                        else:
+                            send = await message.reply_video(
+                                video=f"downloads/{replied_user_id}.mp4",
+                                caption=_["afk_10"].format(
+                                    a=replied_first_name,
+                                    b=seenago,
+                                    c=reasonafk,
+                                ),
+                            )
+                except Exception:
+                    msg += _["afk_10"].format(a=replied_first_name, b=replied_user_id)
+        except:
+            pass
+
+    # If username or mentioned user is AFK
+    if message.entities:
+        entity = message.entities
+        j = 0
+        for x in range(len(entity)):
+            if (entity[j].type) == enums.MessageEntityType.MENTION:
+                found = re.findall("@([_0-9a-zA-Z]+)", message.text)
+                try:
+                    get_user = found[j]
+                    user = await app.get_users(get_user)
+                    if user.id == replied_user_id:
+                        j += 1
+                        continue
+                except:
+                    j += 1
+                    continue
+                verifier = await dB.get_var(user.id, "AFK")
+                if verifier:
+                    try:
+                        afktype = verifier["type"]
+                        timeafk = verifier["time"]
+                        data = verifier["data"]
+                        reasonafk = verifier["reason"]
+                        seenago = get_readable_time((int(time.time() - timeafk)))
+                        if afktype == "text":
+                            msg += _["afk_8"].format(
+                                a=user.first_name[:25],
+                                b=seenago,
+                            )
+                        if afktype == "text_reason":
+                            msg += _["afk_10"].format(
+                                a=user.first_name[:25],
+                                b=seenago,
+                                c=reasonafk,
+                            )
+                        if afktype == "animation":
+                            if str(reasonafk) == "None":
+                                send = await message.reply_animation(
+                                    data,
+                                    caption=_["afk_8"].format(
+                                        a=user.first_name[:25],
+                                        b=seenago,
+                                    ),
+                                )
+                            else:
+                                send = await message.reply_animation(
+                                    data,
+                                    caption=_["afk_10"].format(
+                                        a=user.first_name[:25],
+                                        b=seenago,
+                                        c=reasonafk,
+                                    ),
+                                )
+                        if afktype == "photo":
+                            if str(reasonafk) == "None":
+                                send = await message.reply_photo(
+                                    photo=f"downloads/{user.id}.jpg",
+                                    caption=_["afk_8"].format(
+                                        a=user.first_name[:25],
+                                        b=seenago,
+                                    ),
+                                )
+                            else:
+                                send = await message.reply_photo(
+                                    photo=f"downloads/{user.id}.jpg",
+                                    caption=_["afk_10"].format(
+                                        a=user.first_name[:25],
+                                        b=seenago,
+                                        c=reasonafk,
+                                    ),
+                                )
+                        if afktype == "video":
+                            if str(reasonafk) == "None":
+                                send = await message.reply_video(
+                                    video=f"downloads/{user.id}.mp4",
+                                    caption=_["afk_8"].format(
+                                        a=user.first_name[:25],
+                                        b=seenago,
+                                    ),
+                                )
+                            else:
+                                send = await message.reply_video(
+                                    video=f"downloads/{user.id}.mp4",
+                                    caption=_["afk_10"].format(
+                                        a=user.first_name[:25],
+                                        b=seenago,
+                                        c=reasonafk,
+                                    ),
+                                )
+                    except:
+                        msg += _["afk_9"].format(a=user.first_name[:25])
+            elif (entity[j].type) == enums.MessageEntityType.TEXT_MENTION:
+                try:
+                    user_id = entity[j].user.id
+                    if user_id == replied_user_id:
+                        j += 1
+                        continue
+                    first_name = entity[j].user.first_name
+                except:
+                    j += 1
+                    continue
+                verifier = await dB.get_var(user_id, "AFK")
+                if verifier:
+                    try:
+                        afktype = verifier["type"]
+                        timeafk = verifier["time"]
+                        data = verifier["data"]
+                        reasonafk = verifier["reason"]
+                        seenago = get_readable_time((int(time.time() - timeafk)))
+                        if afktype == "text":
+                            msg += _["afk_8"].format(
+                                a=first_name[:25],
+                                b=seenago,
+                            )
+                        if afktype == "text_reason":
+                            msg += _["afk_10"].format(
+                                a=first_name[:25],
+                                b=seenago,
+                                c=reasonafk,
+                            )
+                        if afktype == "animation":
+                            if str(reasonafk) == "None":
+                                send = await message.reply_animation(
+                                    data,
+                                    caption=_["afk_8"].format(
+                                        a=first_name[:25],
+                                        b=seenago,
+                                    ),
+                                )
+                            else:
+                                send = await message.reply_animation(
+                                    data,
+                                    caption=_["afk_10"].format(
+                                        a=first_name[:25],
+                                        b=seenago,
+                                        c=reasonafk,
+                                    ),
+                                )
+                        if afktype == "photo":
+                            if str(reasonafk) == "None":
+                                send = await message.reply_photo(
+                                    photo=f"downloads/{user_id}.jpg",
+                                    caption=_["afk_8"].format(
+                                        a=first_name[:25],
+                                        b=seenago,
+                                    ),
+                                )
+                            else:
+                                send = await message.reply_photo(
+                                    photo=f"downloads/{user_id}.jpg",
+                                    caption=_["afk_10"].format(
+                                        a=first_name[:25],
+                                        b=seenago,
+                                        c=reasonafk,
+                                    ),
+                                )
+                        if afktype == "video":
+                            if str(reasonafk) == "None":
+                                send = await message.reply_video(
+                                    video=f"downloads/{user_id}.mp4",
+                                    caption=_["afk_8"].format(
+                                        a=first_name[:25],
+                                        b=seenago,
+                                    ),
+                                )
+                            else:
+                                send = await message.reply_video(
+                                    video=f"downloads/{user_id}.mp4",
+                                    caption=_["afk_10"].format(
+                                        a=first_name[:25],
+                                        b=seenago,
+                                        c=reasonafk,
+                                    ),
+                                )
+                    except:
+                        msg += _["afk_10"].format(a=first_name[:25])
+            j += 1
+    if msg != "":
+        try:
+            send = await message.reply_text(msg, disable_web_page_preview=True)
+        except:
+            pass
+    try:
+        await put_cleanmode(message.chat.id, send.id)
+    except:
+        pass
 
