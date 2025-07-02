@@ -130,7 +130,7 @@ async def afk_watcher_func(client, message, _):
         msg = ""
         verifier= await dB.get_var(user_id, "AFK")
         if not verifier:
-            return
+            return msg, None
         try:
             afktype = verifier["type"]
             timeafk = verifier["time"]
