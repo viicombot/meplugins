@@ -162,7 +162,7 @@ async def afk_watcher_func(client, message, _):
     replied_user_id = 0
 
     # client AFK
-    verifier = await dB.get_var(user_id, "AFK")
+    verifier = await dB.get_var(userid, "AFK")
     if verifier:
         try:
             afktype = verifier["type"]
