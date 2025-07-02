@@ -120,7 +120,7 @@ async def active_afk(client, message, _):
     )
     await put_cleanmode(message.chat.id, send.id)
 
-@app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=1)
+@app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=3)
 @language
 async def afk_watcher_func(client, message, _):
     if message.sender_chat:
