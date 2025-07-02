@@ -78,6 +78,7 @@ async def active_afk(client, message, _):
         except Exception:
             send = await message.reply_text(_["afk_10"].format(message.from_user.first_name, message.from_user.id))
         await put_cleanmode(message.chat.id, send.id)
+        await dB.remove_var(user_id, "AFK")
         return
 
     reason = None
@@ -210,6 +211,7 @@ async def afk_watcher_func(client, message, _):
                     )
         except:
             msg += _["afk_4"].format(a=user_name)
+        await dB.remove_var(user_id, "AFK")
 
     if message.reply_to_message:
         try:
