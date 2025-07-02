@@ -211,7 +211,7 @@ async def afk_watcher_func(client, message, _):
                     )
         except:
             msg += _["afk_4"].format(a=user_name)
-        await dB.remove_var(user_id, "AFK")
+        await dB.remove_var(userid, "AFK")
 
     if message.reply_to_message:
         try:
