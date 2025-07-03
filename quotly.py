@@ -481,7 +481,7 @@ async def qcolor_cmd(_, message):
     
 
 
-__MODULES__ = "Quotly"
+__MODULE__ = "Quotly"
 __HELP__ = """
 <blockquote expandable>
 **You can make quote from text random color**
