@@ -12,9 +12,11 @@ from strings import command
 
 __MODULE__ = "Afk"
 __HELP__ = """
-• /afk [reason optional] - Afk from the chat.
+<blockquote expandable>/afk [reason optional] - Afk from the chat.
 
 You can use sticker/foto/video.
+
+If you want unafk, just type any text.</blockquote>
 """
 
 
