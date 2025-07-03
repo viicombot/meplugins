@@ -491,12 +491,12 @@ __HELP__ = """
 **You can make fake quote user the message with this message**
     /q @username (reply message)
 **You can make fake quote user with replies and costum color**
-    /q @username pink -r` (reply message)
+    /q @username pink -r (reply message)
 
 **You can make quote text with replies**
     /q -r (reply message)
 **You can make quote text with replies and costum color**
-    /q -r pink` (reply message)
+    /q -r pink (reply message)
 **You can make more quote text**
     /q 5 (reply message)
 **You can make more quote text using costum color**
