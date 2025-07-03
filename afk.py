@@ -58,7 +58,7 @@ async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, dat
     caption = format_afk_caption(afktype, user_mention, seenago, reasonafk, lang_key, lang)
     return await reply_afk_message(message, afktype, data, caption, user_id)
 
-@app.on_message(command("AFK_COMMAND") & ~BANNED_USERS)
+@app.on_message(filters.command("afk") & ~BANNED_USERS)
 @language
 async def active_afk(client, message, _):
     if message.sender_chat:
