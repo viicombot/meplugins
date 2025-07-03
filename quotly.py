@@ -265,7 +265,7 @@ class Quotly:
         return None, None
 
 
-@app.on_message(filters.command("qcolor") & ~config.BANNED_USERS)
+@app.on_message(filters.command("q") & ~config.BANNED_USERS)
 async def qoutly_cmd(client, message):
     if not message.reply_to_message:
         return await message.reply(f">**Please reply to a message!**")
