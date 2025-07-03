@@ -33,7 +33,7 @@ async def put_cleanmode(chat_id, message_id):
 
 
 def format_afk_caption(afktype, user_mention, seenago, reasonafk, lang_key, lang):
-    if afktype in ["text", "photo", "video", "animation"] and reasonafk == "None":
+    if afktype in ["text", "photo", "video", "animation"] and not reasonafk:
         return lang[lang_key].format(a=user_mention, b=seenago)
     return lang[lang_key.replace("2", "3")].format(a=user_mention, b=seenago, c=reasonafk)
 
@@ -103,20 +103,28 @@ async def active_afk(client, message, _):
         elif reply.photo:
             await app.download_media(reply, file_name=f"{user_id}.jpg")
             afk_type = "photo"
+            reason = reply.caption or ""
         elif reply.video:
             await app.download_media(reply, file_name=f"{user_id}.mp4")
             afk_type = "video"
+            reason = reply.caption or ""
         elif reply.sticker:
             if reply.sticker.is_animated:
                 afk_type = "text"
+                reason = None if len(message.command) == 1 else message.text.split(None, 1)[1].strip()[:100]
             else:
                 await app.download_media(reply, file_name=f"{user_id}.mp4")
                 afk_type = "video"
+                reason = reply.caption or ""
 
-    if len(message.command) > 1:
-        reason = message.text.split(None, 1)[1].strip()[:100]
-        if afk_type == "text":
+    if afk_type == "text":
+        if len(message.command) > 1:
+            reason = message.text.split(None, 1)[1].strip()[:100]
             afk_type = "text_reason"
+    else:
+        if not reason and len(message.command) > 1:
+            reason = message.text.split(None, 1)[1].strip()[:100]
+
 
     details = {
         "type": afk_type,
