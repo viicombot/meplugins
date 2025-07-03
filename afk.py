@@ -91,7 +91,7 @@ async def active_afk(client, message, _):
         return
 
     # Setup new AFK
-    reason = None
+    reason = "Berak dulu"
     data = None
     afk_type = "text"
 
@@ -100,6 +100,7 @@ async def active_afk(client, message, _):
         if reply.animation:
             data = reply.animation.file_id
             afk_type = "animation"
+            reason = reply.caption or ""
         elif reply.photo:
             await app.download_media(reply, file_name=f"{user_id}.jpg")
             afk_type = "photo"
@@ -111,7 +112,6 @@ async def active_afk(client, message, _):
         elif reply.sticker:
             if reply.sticker.is_animated:
                 afk_type = "text"
-                reason = None if len(message.command) == 1 else message.text.split(None, 1)[1].strip()[:100]
             else:
                 await app.download_media(reply, file_name=f"{user_id}.mp4")
                 afk_type = "video"
@@ -120,9 +120,9 @@ async def active_afk(client, message, _):
     if afk_type == "text":
         if len(message.command) > 1:
             reason = message.text.split(None, 1)[1].strip()[:100]
-            afk_type = "text_reason"
+            afk_type = "text"
     else:
-        if not reason and len(message.command) > 1:
+        if len(message.command) > 1:
             reason = message.text.split(None, 1)[1].strip()[:100]
 
 
@@ -211,7 +211,7 @@ async def afk_watcher_func(client, message, _):
                     afk_data["time"],
                     afk_data["data"],
                     afk_data["reason"],
-                    "afk_8",
+                    "afk_10",
                     _
                 )
             except:
@@ -243,7 +243,7 @@ async def afk_watcher_func(client, message, _):
                             afk_data["time"],
                             afk_data["data"],
                             afk_data["reason"],
-                            "afk_8",
+                            "afk_10",
                             _
                         )
                     except:
