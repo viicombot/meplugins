@@ -376,7 +376,7 @@ async def gstick_cmd(client, message):
 
 __MODULE__ = "Sticker"
 __HELP__ = """
-**Add sticker to your pack**
+<blockquote expandable>**Add sticker to your pack**
     /kang (reply sticker)
 
 **Add pack to new your pack**
