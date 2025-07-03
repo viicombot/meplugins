@@ -253,7 +253,7 @@ async def make_stickers(client, message):
         file = await client.save_file(filename)
         media = await client.invoke(
             SendMedia(
-                peer=(await client.resolve_peer(config.LOG_BACKUP)),
+                peer=(await client.resolve_peer(config.LOG_GROUP_ID)),
                 media=InputMediaUploadedDocument(
                     file=file,
                     mime_type=client.guess_mime_type(filename),
