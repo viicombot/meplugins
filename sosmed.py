@@ -69,7 +69,7 @@ async def downloader_cmd(client, message):
         return await proses.edit(f"**An error occurred:** `{str(er)}`")
     
 
-__MODULES__ = "Downloader"
+__MODULE__ = "Downloader"
 __HELP__ = """
 <blockquote expandable>
 
