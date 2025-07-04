@@ -1,12 +1,10 @@
-import asyncio
 import re
 import traceback
 
 from pyrogram import enums, filters
-from pyrogram.errors import MediaEmpty
 
 from core import app
-from database import dB
+from utils.database import dB
 from utils.functions import Tools
 from utils.keyboard import Button
 from logs import LOGGER
@@ -252,7 +250,7 @@ __HELP__ = """
 
 **You can stop filters message on chat if you want**
     /stopfilter (name)
-    
+
 **This command easy to delete all saved filters messages**
     /stopfilter all </blockquote>
 """
