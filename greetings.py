@@ -9,6 +9,7 @@ from utils.functions import Tools
 from utils.keyboard import Button
 from utils.decorators import ONLY_GROUP, ONLY_ADMIN
 from utils.misc import SUDOERS
+from .query_group import goodbye_group, welcome_group
 
 
 @app.on_message(filters.command(["setwelcome", "addwelcome"]) & ~config.BANNED_USERS)
@@ -151,7 +152,7 @@ async def reset_goodbye(_, message):
 
 
 
-@app.on_chat_member_updated(filters.group, group=5)
+@app.on_chat_member_updated(filters.group, group=welcome_group)
 async def join_members(client, member):
     if (
         member.new_chat_member
@@ -253,7 +254,7 @@ async def join_members(client, member):
 
 
 
-@app.on_chat_member_updated(filters.group, group=6)
+@app.on_chat_member_updated(filters.group, group=goodbye_group)
 async def leave_members(client, member):
     if (
         not member.new_chat_member

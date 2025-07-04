@@ -11,6 +11,7 @@ from utils.decorators import ONLY_ADMIN
 from utils.functions import Tools
 from utils.keyboard import Button
 from strings import command
+from .query_group import afk_group
 
 __MODULE__ = "Afk"
 __HELP__ = """
@@ -194,7 +195,7 @@ async def afkdel_state(_, message):
     else:
         await message.reply_text(afk_5.format(message.command[0]))
 
-@app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=3)
+@app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=afk_group)
 async def afk_watcher_func(client, message):
     if message.sender_chat:
         return

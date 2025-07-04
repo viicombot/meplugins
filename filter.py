@@ -9,6 +9,7 @@ from utils.functions import Tools
 from utils.keyboard import Button
 from logs import LOGGER
 from utils.decorators import ONLY_GROUP, ONLY_ADMIN
+from .query_group import filter_group
 
 from config import BANNED_USERS
 
@@ -159,7 +160,7 @@ async def stopfilter_cmd(client, message):
                 f">**Filter `{', '.join(gagal_list)}` not found!**"
             )
 
-@app.on_message(filters.incoming & filters.group & ~filters.bot & ~filters.via_bot & ~BANNED_USERS, group=4)
+@app.on_message(filters.incoming & filters.group & ~filters.bot & ~filters.via_bot & ~BANNED_USERS, group=filter_group)
 async def FILTERS(_, message):
     try:
         text = message.text or message.caption
