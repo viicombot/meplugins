@@ -8,6 +8,7 @@ from utils.database import dB, is_banned_user
 from utils.functions import Tools
 from utils.keyboard import Button
 from utils.decorators import ONLY_GROUP, ONLY_ADMIN
+from utils.misc import SUDOERS
 
 
 @app.on_message(filters.command(["setwelcome", "addwelcome"]) & ~config.BANNED_USERS)
@@ -168,14 +169,14 @@ async def join_members(client, member):
         if user.id in config.OWNER_ID:
             await client.send_animation(
                 chat_id=member.chat.id,
-                animation="CgACAgUAAx0EerfB2wABAm0faGfy0Jqj0A-AwWi7Nmo4cNBO6vYAAm0YAAJNZhhX7kuN3w_NUegeBA",
+                animation="CgACAgUAAx0CerfB2wABAm0faGf_JwRUx65VQRUAAeYB6o8UNPI5AAJtGAACTWYYVwKKKD8K6FjwHgQ",
                 caption=">😳 My **Owner** has also joined the chat!",
             )
             return
-        if user.id in config.SUDOERS:
+        if user.id in SUDOERS:
             await client.send_animation(
                 chat_id=member.chat.id,
-                animation="CgACAgUAAx0EerfB2wABAm0faGfy0Jqj0A-AwWi7Nmo4cNBO6vYAAm0YAAJNZhhX7kuN3w_NUegeBA",
+                animation="CgACAgUAAx0CerfB2wABAm0faGf_JwRUx65VQRUAAeYB6o8UNPI5AAJtGAACTWYYVwKKKD8K6FjwHgQ",
                 caption=">😳 **Sudoers** has also joined the chat!",
             )
             return
@@ -264,7 +265,7 @@ async def leave_members(client, member):
         return
     try:
         user = member.old_chat_member.user if member.old_chat_member else member.from_user
-        if user.id in (config.OWNER_ID, config.SUDOERS):
+        if user.id in (config.OWNER_ID, SUDOERS):
             await client.send_message(
                 member.chat.id,
                 ">**Hey master, dont leave me alone 😭**",
