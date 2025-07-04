@@ -179,7 +179,7 @@ async def FILTERS(_, message):
             teks, button = Button.parse_msg_buttons(data)
             teks_formated = await Tools.escape_filter(message, teks, Tools.parse_words)
             if button:
-                reply_markup = Button.create_inline_keyboard(button)
+                reply_markup = await Button.create_inline_keyboard(button)
                 if data_type == "text":
                     await message.reply(
                         teks_formated,
