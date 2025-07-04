@@ -356,5 +356,5 @@ __HELP__ = """
 **You can disable greetings goodbye**
     <b>★ /resetgoodbye</b>
 
-**See markdown and filling if you want costum message more.**
+**See markdown and filling if you want costum message more.**</blockquote>
 """
