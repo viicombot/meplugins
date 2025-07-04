@@ -1,4 +1,4 @@
-import re
+import traceback
 import time
 from datetime import datetime, timedelta
 from pyrogram import filters, enums
@@ -225,8 +225,8 @@ async def afk_watcher_func(client, message):
                 afk_data["reason"],
                 is_online=True,
             )
-        except:
-            msg += afk_4.format(a=user_mention)
+        except Exception:
+            print(traceback.format_exc())
         await dB.remove_var(user_id, "AFK")
 
     # AFK Checker untuk user yang di-reply
@@ -245,9 +245,10 @@ async def afk_watcher_func(client, message):
                     afk_data["time"],
                     afk_data["data"],
                     afk_data["reason"],
+                    is_online=False
                 )
-            except:
-                msg += afk_10.format(a=r_mention, b=r_id)
+            except Exception:
+                print(traceback.format_exc())
 
     # AFK Checker via @mention dan text_mention
     if message.entities:
@@ -275,9 +276,10 @@ async def afk_watcher_func(client, message):
                             afk_data["time"],
                             afk_data["data"],
                             afk_data["reason"],
+                            is_online=False
                         )
-                    except:
-                        msg += afk_9.format(a=user.first_name[:25])
+                    except Exception:
+                        print(traceback.format_exc())
 
     if msg:
         try:
