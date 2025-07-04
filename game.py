@@ -19,7 +19,7 @@ async def start_asah_otak(client, message):
     return await message.reply_text(f"🧠 Asah Otak:\n\n{soal['soal']}\n\nSilahkan jawab pertanyaan diatas!\n\nKetik `nyerah` jika tidak tahu\nKetik `skip-asahotak` untuk melewati soal.")
 
 
-@app.on_message(filters.incoming & filters.group & ~BANNED_USERS, group=4)
+@app.on_message(filters.incoming & filters.group & ~BANNED_USERS, group=7)
 async def jawab_asah_otak(_, message):
     chat_id = message.chat.id
     if chat_id not in chat_asah_otak:
