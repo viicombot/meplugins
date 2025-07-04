@@ -49,10 +49,17 @@ def get_media_path(user_id, afktype):
     ext = {"photo": "jpg", "video": "mp4"}.get(afktype)
     return f"downloads/{user_id}.{ext}" if ext else None
 
-def format_afk_caption(afktype, user_mention, seenago, reasonafk):
+def online_afk_caption(afktype, user_mention, seenago, reasonafk):
     if afktype in ["text", "photo", "video", "animation"] and not reasonafk:
         return afk_2.format(a=user_mention, b=seenago)
     return afk_3.format(a=user_mention, b=seenago, c=reasonafk)
+
+
+def still_afk_caption(afktype, user_mention, seenago, reasonafk):
+    if afktype in ["text", "photo", "video", "animation"] and not reasonafk:
+        return afk_8.format(a=user_mention, b=seenago)
+    return afk_10.format(a=user_mention, b=seenago, c=reasonafk)
+
 
 async def reply_afk_message(message, afktype, data, caption, user_id, reply_markup):
     if reply_markup is None:
@@ -75,7 +82,7 @@ async def reply_afk_message(message, afktype, data, caption, user_id, reply_mark
             return await message.reply_text(caption, disable_web_page_preview=True, reply_markup=reply_markup)
 
 
-async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, data, reasonafk):
+async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, data, reasonafk, is_online: bool = False):
     seenago = get_readable_time(int(time.time() - timeafk))
     clean_text, buttons = Button.parse_msg_buttons(reasonafk)
     if buttons:
@@ -83,7 +90,10 @@ async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, dat
     else:
         reply_markup = None
     teks_formated = await Tools.escape_filter(message, clean_text, Tools.parse_words)
-    caption = format_afk_caption(afktype, user_mention, seenago, teks_formated)
+    if is_online:
+        caption = online_afk_caption(afktype, user_mention, seenago, teks_formated)
+    else:
+        caption = still_afk_caption(afktype, user_mention, seenago, teks_formated)
     return await reply_afk_message(message, afktype, data, caption, user_id, reply_markup)
 
 @app.on_message(filters.command("afk") & ~BANNED_USERS)
@@ -107,6 +117,7 @@ async def active_afk(client, message):
                 afk_data["time"],
                 afk_data["data"],
                 afk_data["reason"],
+                is_online=True,
             )
         except Exception:
             send = await message.reply_text(afk_10.format(user_firstname, user_id))
@@ -212,6 +223,7 @@ async def afk_watcher_func(client, message):
                 afk_data["time"],
                 afk_data["data"],
                 afk_data["reason"],
+                is_online=True,
             )
         except:
             msg += afk_4.format(a=user_mention)
