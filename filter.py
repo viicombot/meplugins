@@ -198,7 +198,7 @@ async def FILTERS(_, message):
                         "sticker": message.reply_sticker,
                         "video_note": message.reply_video_note,
                     }
-                    kwargs = {"reply_to_message_id": message.id}
+                    kwargs = {"reply_to_message_id": message.id, "reply_markup": reply_markup}
                     if data_type not in ["sticker", "video_note"]:
                         kwargs["caption"] = teks_formated
                         kwargs["parse_mode"] = enums.ParseMode.HTML
