@@ -8,6 +8,7 @@ from core import app
 from utils import get_readable_time
 from utils.database import dB, cleanmode, cleanmode_on, cleanmode_off
 from utils.decorators import ONLY_ADMIN
+from utils.functions import Tools
 from utils.keyboard import Button
 from strings import command
 
@@ -42,8 +43,6 @@ async def put_cleanmode(chat_id, message_id):
         "timer_after": time_now + timedelta(minutes=1),
     }
     cleanmode[chat_id].append(put)
-
-
 
 
 def get_media_path(user_id, afktype):
@@ -83,7 +82,8 @@ async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, dat
         reply_markup = await Button.create_inline_keyboard(buttons)
     else:
         reply_markup = None
-    caption = format_afk_caption(afktype, user_mention, seenago, clean_text)
+    teks_formated = await Tools.escape_filter(message, clean_text, Tools.parse_words)
+    caption = format_afk_caption(afktype, user_mention, seenago, teks_formated)
     return await reply_afk_message(message, afktype, data, caption, user_id, reply_markup)
 
 @app.on_message(filters.command("afk") & ~BANNED_USERS)
