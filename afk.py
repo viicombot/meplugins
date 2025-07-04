@@ -19,7 +19,8 @@ __HELP__ = """
 
 You can use sticker/foto/video.
 
-If you want unafk, just type any text.</blockquote>
+If you want unafk, just type any text.
+**See markdown and filling if you want costum message more.**</blockquote>
 """
 
 afk_1 = ">**Unable to use the channel account.**"

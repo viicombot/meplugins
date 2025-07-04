@@ -256,5 +256,7 @@ __HELP__ = """
     <b>★ /stopfilter</b> (name)
 
 **This command easy to delete all saved filters messages**
-    <b>★ /stopfilter all</b> </blockquote>
+    <b>★ /stopfilter all</b> 
+
+**See markdown and filling if you want costum message more.**</blockquote>
 """

@@ -265,7 +265,7 @@ async def leave_members(client, member):
         return
     try:
         user = member.old_chat_member.user if member.old_chat_member else member.from_user
-        if user.id in (config.OWNER_ID, SUDOERS):
+        if user.id in config.OWNER_ID:
             await client.send_message(
                 member.chat.id,
                 ">**Hey master, dont leave me alone 😭**",
@@ -332,3 +332,29 @@ async def leave_members(client, member):
             
     except Exception:
         print(f"ERROR leave_members: {traceback.format_exc()}")
+
+
+
+__MODULE__ = "Greetings"
+__HELP__ = """
+<blockquote expandable>
+**You can set costum greetings welcome for new members joined*
+    <b>★ /setwelcome</b> (reply message)
+
+**Get welcome status** 
+    <b>★ /welcome</b>
+
+**You can set costum greetings goodbye for members leaved*
+    <b>★ /setgoodbye</b>
+
+**Get goodbye status** 
+    <b>★ /goodbye</b>
+
+**You can disable greetings welcome**
+    <b>★ /resetwelcome</b>
+
+**You can disable greetings goodbye**
+    <b>★ /resetgoodbye</b>
+
+**See markdown and filling if you want costum message more.**
+"""
