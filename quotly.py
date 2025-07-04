@@ -485,29 +485,29 @@ __MODULE__ = "Quotly"
 __HELP__ = """
 <blockquote expandable>
 **You can make quote from text random color**
-    /q (reply message)
+    <b>★ /q</b> (reply message)
 
 **You can make quote from text using costum color**
-    /q pink (reply message)
+    <b>★ /q pink</b> (reply message)
 
 **You can make fake quote user the message with this message**
-    /q @username (reply message)
+    <b>★ /q</b> @username (reply message)
 
 **You can make fake quote user with replies and costum color**
-    /q @username pink -r (reply message)
+    <b>★ /q</b> @username pink -r (reply message)
 
 **You can make quote text with replies**
-    /q -r (reply message)
+    <b>★ /q</b> -r (reply message)
 
 **You can make quote text with replies and costum color**
-    /q -r pink (reply message)
+    <b>★ /q</b> -r pink (reply message)
 
 **You can make more quote text**
-    /q 5 (reply message)
+    <b>★ /</b> 5 (reply message)
 
 **You can make more quote text using costum color**
-    /q 5 pink (reply message)
+    <b>★ /q</b> 5 pink (reply message)
     
 **Get supported color for quote**
-    /qcolor</blockquote>
+    <b>★ /qcolor</b></blockquote>
 """

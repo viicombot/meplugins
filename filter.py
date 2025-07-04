@@ -240,17 +240,17 @@ __MODULE__ = "Filters"
 __HELP__ = """
 <blockquote expandable>
 **You can active auto reply message from this command**
-    /savefilter (name) (reply message)
+    <b>★ /savefilter</b> (name) (reply message)
 
 **View all saved filters message from your account** 
-    /filters
+    <b>★ /filters</b>
 
 **You can get the filter format from this command**
-    /getfilter (name) raw
+    <b>★ /getfilter</b> (name) raw
 
 **You can stop filters message on chat if you want**
-    /stopfilter (name)
+    <b>★ /stopfilter</b> (name)
 
 **This command easy to delete all saved filters messages**
-    /stopfilter all </blockquote>
+    <b>★ /stopfilter all</b> </blockquote>
 """

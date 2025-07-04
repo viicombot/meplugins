@@ -12,7 +12,8 @@ from strings import command
 
 __MODULE__ = "Afk"
 __HELP__ = """
-<blockquote expandable>/afk [reason optional] - Afk from the chat.
+<blockquote expandable>
+<b>★ /afk</b> [reason optional] - Afk from the chat.
 
 You can use sticker/foto/video.
 

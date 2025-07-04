@@ -73,8 +73,8 @@ __MODULE__ = "Downloader"
 __HELP__ = """
 <blockquote expandable>
 
-**You can download any media from link**
-    /dl (url)
+**You can download any media from sosial media link**
+    <b>★ /dl</b> (url)
 
 **Supported links**:
     - instagram
