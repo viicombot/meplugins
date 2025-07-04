@@ -8,12 +8,13 @@ from utils.database import dB
 from utils.functions import Tools
 from utils.keyboard import Button
 from logs import LOGGER
-from utils.decorators import ONLY_GROUP
+from utils.decorators import ONLY_GROUP, ONLY_ADMIN
 
 from config import BANNED_USERS
 
 @app.on_message(filters.command(["savefilter", "addfilter", "filter"]) & ~BANNED_USERS)
 @ONLY_GROUP
+@ONLY_ADMIN
 async def filter_cmd(_, message):
     xx = await message.reply(">**Please wait...**")
     rep = message.reply_to_message
@@ -43,6 +44,7 @@ async def filter_cmd(_, message):
 
 @app.on_message(filters.command(["getfilter"]) & ~BANNED_USERS)
 @ONLY_GROUP
+@ONLY_ADMIN
 async def getfilter_cmd(client, message):
     xx = await message.reply(">**Please wait...**")
     try:
@@ -105,6 +107,7 @@ async def get_raw_filter(_, message, xx, data):
 
 @app.on_message(filters.command(["filters", "allfilter"]) & ~BANNED_USERS)
 @ONLY_GROUP
+@ONLY_ADMIN
 async def filters_cmd(_, message):
     xx = await message.reply(">**Please wait...**")
     getfilter = await dB.all_var(message.chat.id, "FILTER")
@@ -118,6 +121,7 @@ async def filters_cmd(_, message):
 
 @app.on_message(filters.command(["stopfilter", "clearfilter"]) & ~BANNED_USERS)
 @ONLY_GROUP
+@ONLY_ADMIN
 async def stopfilter_cmd(client, message):
     args = client.get_arg(message).split(",")
     xx = await message.reply(">**Please wait...**")

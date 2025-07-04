@@ -7,7 +7,7 @@ from config import BANNED_USERS
 from core import app
 from utils import get_readable_time
 from utils.database import dB, cleanmode, cleanmode_on, cleanmode_off
-from utils.decorators import language
+from utils.decorators import ONLY_ADMIN
 from strings import command
 
 __MODULE__ = "Afk"
@@ -20,7 +20,17 @@ You can use sticker/foto/video.
 If you want unafk, just type any text.</blockquote>
 """
 
-
+afk_1 = ">**Unable to use the channel account.**"
+afk_2 = ">**{a} is back online and has been AFK for** `{b}`\n"
+afk_3 = ">**{a} is back online and has been AFK for** `{b}`\n**Reason:** `{c}`"
+afk_4 = ">**{a} is back online**"
+afk_5 = ">**Usage:**\n/{0} [ENABLE|DISABLE] to enable or disable automatic AFK message deletion."
+afk_6 = ">**Automatic deletion of AFK messages in this chat is `enabled`**."
+afk_7 = ">**Automatic deletion of AFK messages is `disabled`.**"
+afk_8 = ">**{a} has been AFK since :** `{b}` **ago.**\n\n"
+afk_9 = ">**{a} is currently AFK!.**"
+afk_10 = ">**{a} has been AFK since :** `{b}` **ago.**\n\n**Reason:** `{c}`."
+afk_11 = ">**{a} Now AFK!.**"
 
 async def put_cleanmode(chat_id, message_id):
     if chat_id not in cleanmode:
@@ -33,10 +43,10 @@ async def put_cleanmode(chat_id, message_id):
     cleanmode[chat_id].append(put)
 
 
-def format_afk_caption(afktype, user_mention, seenago, reasonafk, lang_key, lang):
+def format_afk_caption(afktype, user_mention, seenago, reasonafk):
     if afktype in ["text", "photo", "video", "animation"] and not reasonafk:
-        return lang[lang_key].format(a=user_mention, b=seenago)
-    return lang[lang_key.replace("2", "3")].format(a=user_mention, b=seenago, c=reasonafk)
+        return afk_2.format(a=user_mention, b=seenago)
+    return afk_3.format(a=user_mention, b=seenago, c=reasonafk)
 
 
 def get_media_path(user_id, afktype):
@@ -54,16 +64,15 @@ async def reply_afk_message(message, afktype, data, caption, user_id):
     else:
         return await message.reply_text(caption, disable_web_page_preview=True)
 
-async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, data, reasonafk, lang_key, lang):
+async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, data, reasonafk, lang):
     seenago = get_readable_time(int(time.time() - timeafk))
-    caption = format_afk_caption(afktype, user_mention, seenago, reasonafk, lang_key, lang)
+    caption = format_afk_caption(afktype, user_mention, seenago, reasonafk)
     return await reply_afk_message(message, afktype, data, caption, user_id)
 
 @app.on_message(filters.command("afk") & ~BANNED_USERS)
-@language
-async def active_afk(client, message, _):
+async def active_afk(client, message):
     if message.sender_chat:
-        return await message.reply_text(_["afk_1"])
+        return await message.reply_text(afk_1)
 
     user_id = message.from_user.id
     user_mention = message.from_user.mention
@@ -81,11 +90,10 @@ async def active_afk(client, message, _):
                 afk_data["time"],
                 afk_data["data"],
                 afk_data["reason"],
-                "afk_2",
-                _
+                afk_2,
             )
         except Exception:
-            send = await message.reply_text(_["afk_10"].format(user_firstname, user_id))
+            send = await message.reply_text(afk_10.format(user_firstname, user_id))
 
         await put_cleanmode(message.chat.id, send.id)
         await dB.remove_var(user_id, "AFK")
@@ -135,32 +143,31 @@ async def active_afk(client, message, _):
     }
     await dB.set_var(user_id, "AFK", details)
 
-    send = await message.reply_text(_["afk_11"].format(a=user_mention, b=user_id))
+    send = await message.reply_text(afk_11.format(a=user_mention, b=user_id))
     await put_cleanmode(message.chat.id, send.id)
 
 
     
 @app.on_message(command("AFKDEL_COMMAND") & filters.group)
-@language
-async def afkdel_state(client, message, _):
+@ONLY_ADMIN
+async def afkdel_state(_, message):
     if not message.from_user:
         return
     if len(message.command) < 2:
-        return await message.reply_text(_["afk_5"].format(message.text.split()[0]))
+        return await message.reply_text(afk_5.format(message.text.split()[0]))
 
     state = message.text.split(None, 1)[1].strip().lower()
     if state == "enable":
         await cleanmode_on(message.chat.id)
-        await message.reply_text(_["afk_6"])
+        await message.reply_text(afk_6)
     elif state == "disable":
         await cleanmode_off(message.chat.id)
-        await message.reply_text(_["afk_7"])
+        await message.reply_text(afk_7)
     else:
-        await message.reply_text(_["afk_5"].format(message.command[0]))
+        await message.reply_text(afk_5.format(message.command[0]))
 
 @app.on_message(filters.group & ~filters.bot & ~filters.via_bot, group=3)
-@language
-async def afk_watcher_func(client, message, _):
+async def afk_watcher_func(client, message):
     if message.sender_chat:
         return
 
@@ -189,11 +196,10 @@ async def afk_watcher_func(client, message, _):
                 afk_data["time"],
                 afk_data["data"],
                 afk_data["reason"],
-                "afk_2",
-                _
+                afk_2
             )
         except:
-            msg += _["afk_4"].format(a=user_mention)
+            msg += afk_4.format(a=user_mention)
         await dB.remove_var(user_id, "AFK")
 
     # AFK Checker untuk user yang di-reply
@@ -212,11 +218,10 @@ async def afk_watcher_func(client, message, _):
                     afk_data["time"],
                     afk_data["data"],
                     afk_data["reason"],
-                    "afk_10",
-                    _
+                    afk_10
                 )
             except:
-                msg += _["afk_10"].format(a=r_mention, b=r_id)
+                msg += afk_10.format(a=r_mention, b=r_id)
 
     # AFK Checker via @mention dan text_mention
     if message.entities:
@@ -244,11 +249,10 @@ async def afk_watcher_func(client, message, _):
                             afk_data["time"],
                             afk_data["data"],
                             afk_data["reason"],
-                            "afk_10",
-                            _
+                            afk_10
                         )
                     except:
-                        msg += _["afk_9"].format(a=user.first_name[:25])
+                        msg += afk_9.format(a=user.first_name[:25])
 
     if msg:
         try:
