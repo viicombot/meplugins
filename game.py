@@ -21,7 +21,9 @@ async def start_asah_otak(client, message):
 @app.on_message(filters.incoming & filters.group & ~BANNED_USERS)
 async def jawab_asah_otak(_, message):
     chat_id = message.chat.id
-    text = message.text.strip()
+    text = message.text
+    if not text:
+        return
 
     if chat_id not in chat_asah_otak:
         return
