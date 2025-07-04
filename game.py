@@ -18,7 +18,7 @@ async def start_asah_otak(client, message):
     return await message.reply_text(f"🧠 Asah Otak:\n\n{soal['soal']}\n\nBalas dengan jawaban kamu!")
 
 
-@app.on_message(filters.incoming & filters.group & ~filters.edited & ~BANNED_USERS)
+@app.on_message(filters.incoming & filters.group & ~BANNED_USERS)
 async def jawab_asah_otak(_, message):
     chat_id = message.chat.id
     text = message.text.strip()
