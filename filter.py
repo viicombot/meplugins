@@ -155,7 +155,7 @@ async def stopfilter_cmd(client, message):
                 f">**Filter `{', '.join(gagal_list)}` not found!**"
             )
 
-@app.on_message(filters.group & ~filters.bot & ~filters.via_bot & ~BANNED_USERS, group=3)
+@app.on_message(filters.incoming & filters.group & ~filters.bot & ~filters.via_bot & ~BANNED_USERS, group=3)
 async def FILTERS(_, message):
     try:
         text = message.text or message.caption
