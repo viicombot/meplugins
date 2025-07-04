@@ -8,6 +8,7 @@ from core import app
 from utils import get_readable_time
 from utils.database import dB, cleanmode, cleanmode_on, cleanmode_off
 from utils.decorators import ONLY_ADMIN
+from utils.keyboard import Button
 from strings import command
 
 __MODULE__ = "Afk"
@@ -43,31 +44,47 @@ async def put_cleanmode(chat_id, message_id):
     cleanmode[chat_id].append(put)
 
 
-def format_afk_caption(afktype, user_mention, seenago, reasonafk):
-    if afktype in ["text", "photo", "video", "animation"] and not reasonafk:
-        return afk_2.format(a=user_mention, b=seenago)
-    return afk_3.format(a=user_mention, b=seenago, c=reasonafk)
 
 
 def get_media_path(user_id, afktype):
     ext = {"photo": "jpg", "video": "mp4"}.get(afktype)
     return f"downloads/{user_id}.{ext}" if ext else None
 
+def format_afk_caption(afktype, user_mention, seenago, reasonafk):
+    if afktype in ["text", "photo", "video", "animation"] and not reasonafk:
+        return afk_2.format(a=user_mention, b=seenago)
+    return afk_3.format(a=user_mention, b=seenago, c=reasonafk)
 
-async def reply_afk_message(message, afktype, data, caption, user_id):
-    if afktype == "animation":
-        return await message.reply_animation(data, caption=caption)
-    elif afktype == "photo":
-        return await message.reply_photo(photo=get_media_path(user_id, afktype), caption=caption)
-    elif afktype == "video":
-        return await message.reply_video(video=get_media_path(user_id, afktype), caption=caption)
+async def reply_afk_message(message, afktype, data, caption, user_id, reply_markup):
+    if reply_markup is None:
+        if afktype == "animation":
+            return await message.reply_animation(data, caption=caption)
+        elif afktype == "photo":
+            return await message.reply_photo(photo=get_media_path(user_id, afktype), caption=caption)
+        elif afktype == "video":
+            return await message.reply_video(video=get_media_path(user_id, afktype), caption=caption)
+        else:
+            return await message.reply_text(caption, disable_web_page_preview=True)
     else:
-        return await message.reply_text(caption, disable_web_page_preview=True)
+        if afktype == "animation":
+            return await message.reply_animation(data, caption=caption, reply_markup=reply_markup)
+        elif afktype == "photo":
+            return await message.reply_photo(photo=get_media_path(user_id, afktype), caption=caption, reply_markup=reply_markup)
+        elif afktype == "video":
+            return await message.reply_video(video=get_media_path(user_id, afktype), caption=caption, reply_markup=reply_markup)
+        else:
+            return await message.reply_text(caption, disable_web_page_preview=True, reply_markup=reply_markup)
 
-async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, data, reasonafk, lang):
+
+async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, data, reasonafk):
     seenago = get_readable_time(int(time.time() - timeafk))
-    caption = format_afk_caption(afktype, user_mention, seenago, reasonafk)
-    return await reply_afk_message(message, afktype, data, caption, user_id)
+    clean_text, buttons = Button.parse_msg_buttons(reasonafk)
+    if buttons:
+        reply_markup = await Button.create_inline_keyboard(buttons)
+    else:
+        reply_markup = None
+    caption = format_afk_caption(afktype, user_mention, seenago, clean_text)
+    return await reply_afk_message(message, afktype, data, caption, user_id, reply_markup)
 
 @app.on_message(filters.command("afk") & ~BANNED_USERS)
 async def active_afk(client, message):
@@ -90,7 +107,6 @@ async def active_afk(client, message):
                 afk_data["time"],
                 afk_data["data"],
                 afk_data["reason"],
-                afk_2,
             )
         except Exception:
             send = await message.reply_text(afk_10.format(user_firstname, user_id))
@@ -196,7 +212,6 @@ async def afk_watcher_func(client, message):
                 afk_data["time"],
                 afk_data["data"],
                 afk_data["reason"],
-                afk_2
             )
         except:
             msg += afk_4.format(a=user_mention)
@@ -218,7 +233,6 @@ async def afk_watcher_func(client, message):
                     afk_data["time"],
                     afk_data["data"],
                     afk_data["reason"],
-                    afk_10
                 )
             except:
                 msg += afk_10.format(a=r_mention, b=r_id)
@@ -249,7 +263,6 @@ async def afk_watcher_func(client, message):
                             afk_data["time"],
                             afk_data["data"],
                             afk_data["reason"],
-                            afk_10
                         )
                     except:
                         msg += afk_9.format(a=user.first_name[:25])
