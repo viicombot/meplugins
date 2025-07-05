@@ -6,6 +6,15 @@ from config import BANNED_USERS
 from utils.database import dB
 from .query_group import game_group
 
+__MODULE__ = "Game"
+__HELP__ = """
+<blockquote expandable>
+<b>★ /asahotak</b> - Play asah otak game, test your brains.
+
+Type `nyerah` if you fool
+Type `skip-asahotak` for next question</blockquote>
+"""
+
 chat_asah_otak = {}
 
 with open("assets/asah_otak.json", encoding="utf-8") as f:
