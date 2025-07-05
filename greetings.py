@@ -170,14 +170,14 @@ async def join_members(client, member):
         if user.id in config.OWNER_ID:
             await client.send_animation(
                 chat_id=member.chat.id,
-                animation="CgACAgUAAx0CerfB2wABAm0faGf_JwRUx65VQRUAAeYB6o8UNPI5AAJtGAACTWYYVwKKKD8K6FjwHgQ",
+                animation="assets/owner_welcome.mp4",
                 caption=">😳 My **Owner** has also joined the chat!",
             )
             return
         if user.id in SUDOERS:
             await client.send_animation(
                 chat_id=member.chat.id,
-                animation="CgACAgUAAx0CerfB2wABAm0faGf_JwRUx65VQRUAAeYB6o8UNPI5AAJtGAACTWYYVwKKKD8K6FjwHgQ",
+                animation="assets/owner_welcome.mp4",
                 caption=">😳 **Sudoers** has also joined the chat!",
             )
             return
