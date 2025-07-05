@@ -213,7 +213,6 @@ async def FILTERS(_, message):
                 if data_type == "text":
                     await message.reply(
                         teks_formated,
-                        reply_markup=reply_markup,
                         disable_web_page_preview=True,
                         parse_mode=enums.ParseMode.HTML,
                     )
