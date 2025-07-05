@@ -1,4 +1,4 @@
-
+import asyncio
 
 from core import app
 from utils import pastebin
@@ -9,13 +9,13 @@ from .query_group import ankes_group
 from config import BANNED_USERS
 from utils.misc import SUDOERS
 
-from pyrogram import filters, enums, errors
+from pyrogram import filters, errors
 
 
-
-@app.on_message(filters.command(["protect", "antigacst"]) & ~BANNED_USERS)
+@app.on_message(filters.command(["protect", "antigcast"]) & ~BANNED_USERS)
 @ONLY_GROUP
 @ONLY_ADMIN
+@VerifyAnkes
 async def ankestools(_, message):
     chat_id = message.chat.id
     if len(message.command) < 2:
@@ -26,17 +26,19 @@ async def ankestools(_, message):
         if status:
             return await message.reply(">**Protect sudah diaktifkan**")
         await dB.set_var(chat_id, "PROTECT", jk)
+        Deleter.SETUP_CHATS.add(chat_id)
         return await message.reply(f">**Berhasil mengatur protect menjadi {jk}.**")
     elif jk in ["Off", "off"]:
         if status is None:
-            return await message.reply(">**Protect belum aktif**")
+            return await message.reply(">**Protect belum diaktifkan**")
         await dB.remove_var(chat_id, "PROTECT")
+        Deleter.SETUP_CHATS.remove(chat_id)
         return await message.reply(f">**Berhasil mengatur protect menjadi {jk}.**")
     else:
         return await message.reply(f">**{jk} Format salah, Gunakan `/protect [on/off]`.**")
     
 
-@app.on_message(filters.command(["clearfree", "clearapproved"]) & ~BANNED_USERS)
+@app.on_message(filters.command(["clearwhite","clearfree", "clearapproved"]) & ~BANNED_USERS)
 @ONLY_GROUP
 @ONLY_ADMIN
 async def clear_approved(_, message):
@@ -79,6 +81,7 @@ async def add_approve(client, message):
     if ids in freedom:
         return await message.reply_text(">**Pengguna sudah disetujui.**")
     await dB.add_to_var(chat_id, "APPROVED_USERS", ids)
+    Deleter.WHITELIST_USER.add(ids)
     return await message.reply(f">**Pengguna: {user.mention} telah disetujui tidak akan terkena antigcast.")
 
 
@@ -104,9 +107,9 @@ async def un_approve(client, message):
     freedom = await dB.get_list_from_var(chat_id, "APPROVED_USERS")
     if ids not in freedom:
         return await message.reply_text(">**Pengguna memang belum disetujui.**")
-    else:
-        await dB.remove_from_var(chat_id, "APPROVED_USERS", ids)
-        return await message.reply(f">**Pengguna: {user.mention} telah dihapus dari daftar approved.**")
+    await dB.remove_from_var(chat_id, "APPROVED_USERS", ids)
+    Deleter.WHITELIST_USER.remove(ids)
+    return await message.reply(f">**Pengguna: {user.mention} telah dihapus dari daftar approved.**")
 
 @app.on_message(filters.command(["listwhite", "approved"]) & ~BANNED_USERS)
 @ONLY_GROUP
@@ -134,73 +137,99 @@ async def listblack(_, message):
     blacklist = await dB.get_list_from_var(chat_id, "SILENT_USER")
     if len(blacklist) == 0:
         return await message.reply(">**Belum ada pengguna yang diblacklist.**")
-    msg = f"Pengguna Blackist Di {message.chat.title}:\n\n"
-    for count, org in enumerate(cekpre, 1):
-        msg += f"**•**{count} -> {org}\n"
-    if cekpre == []:
-        return await message.reply("Tidak ada pengguna!!")
-    else:
-        try:
-            return await message.reply(msg)
-        except MessageTooLong:
-            with io.BytesIO(str.encode(msg)) as out_file:
-                out_file.name = "blacklist-user.txt"
-                return await message.reply_document(document=out_file)
+    msg = f"<blockquote expandable>**Pengguna Blackist Di {message.chat.title}:**\n\n"
+    for count, user in enumerate(blacklist, 1):
+        msg += f"**•**{count} -> {user}\n"
+    msg += "</blockquote>"
+    try:
+        return await message.reply(msg)
+    except errors.MessageTooLong:
+        link = await pastebin.paste(msg)
+        return await message.reply(link, disable_web_page_preview=True)
 
 
-@CMD.BOT("addblack", FILTERS.GROUP_ADMIN)
-@CMD.EXPIRED
+@app.on_message(filters.command(["addblack"]) & ~BANNED_USERS)
+@ONLY_GROUP
 @ONLY_ADMIN
 async def _(client, message):
     reply = message.reply_to_message
     chat_id = message.chat.id
-    if message.chat.type == enums.ChatType.PRIVATE:
-        return await message.reply("**Silahkan gunakan perintah ini didalam grup.**")
+    if reply.sender_chat:
+        return await message.reply(">**Gunakan perintah ini dengan membalas pesan pengguna!! Bukan akun anonymous.**")
     try:
         target = reply.from_user.id if reply else message.text.split()[1]
     except (AttributeError, IndexError):
-        return await message.reply(
-            "Balas pesan pengguna atau berikan username pengguna."
-        )
+        return await message.reply(">**Balas pesan pengguna atau berikan username pengguna.**")
     try:
         user = await client.get_users(target)
-    except (PeerIdInvalid, KeyError, UsernameInvalid, UsernameNotOccupied):
-        return await message.reply("Silahkan berikan id pengguna!!")
+    except (errors.PeerIdInvalid, KeyError, errors.UsernameInvalid, errors.UsernameNotOccupied):
+        return await message.reply(">**Silahkan berikan id pengguna yang valid!!**")
     ids = user.id
-    if ids in ADMIN_IDS:
-        return await message.reply("Pengguna adalah owner!!")
+    if ids in SUDOERS:
+        return await message.reply(">**Pengguna adalah SUDOERS bot!!**")
     dicekah = await dB.get_list_from_var(chat_id, "SILENT_USER")
     if ids in dicekah:
-        return await message.reply_text("User already blacklist.")
-    else:
-        await dB.add_to_var(chat_id, "SILENT_USER", ids)
-        return await message.reply(f"User : {ids} added to blacklist.")
+        return await message.reply_text(">**Pengguna sudah diblacklist.**")
+    await dB.add_to_var(chat_id, "SILENT_USER", ids)
+    Deleter.BLACKLIST_USER.add(ids)
+    msg = await message.reply(f">**Pengguna: {ids} ditambahkan ke blacklist.**")
+    await asyncio.sleep(1)
+    return await msg.delete()
 
 
-@CMD.BOT("remblack", FILTERS.GROUP_ADMIN)
-@CMD.EXPIRED
+@app.on_message(filters.command(["delblack", "unblack"]) & ~BANNED_USERS)
+@ONLY_GROUP
 @ONLY_ADMIN
 async def _(client, message):
     reply = message.reply_to_message
     chat_id = message.chat.id
-    if message.chat.type == enums.ChatType.PRIVATE:
-        return await message.reply("**Silahkan gunakan perintah ini didalam grup.**")
+    if reply.sender_chat:
+        return await message.reply(">**Gunakan perintah ini dengan membalas pesan pengguna!! Bukan akun anonymous.**")
     try:
         target = reply.from_user.id if reply else message.text.split()[1]
     except (AttributeError, IndexError):
-        return await message.reply(
-            "Balas pesan pengguna atau berikan username pengguna."
-        )
+        return await message.reply(">**Balas pesan pengguna atau berikan username pengguna.**")
     try:
         user = await client.get_users(target)
-    except (PeerIdInvalid, KeyError, UsernameInvalid, UsernameNotOccupied):
-        return await message.reply("Silahkan berikan id pengguna!!")
+    except (errors.PeerIdInvalid, KeyError, errors.UsernameInvalid, errors.UsernameNotOccupied):
+        return await message.reply(">**Silahkan berikan id pengguna yang valid!!**")
     ids = user.id
-    if ids in ADMIN_IDS:
-        return await message.reply("Pengguna adalah owner!!")
     dicekah = await dB.get_list_from_var(chat_id, "SILENT_USER")
-    if ids in dicekah:
-        await dB.remove_from_var(chat_id, "SILENT_USER", ids)
-        return await message.reply(f"User : {ids} deleted from blacklist.")
-    else:
+    if ids not in dicekah:
         return await message.reply_text("User not in blacklist.")
+    await dB.remove_from_var(chat_id, "SILENT_USER", ids)
+    Deleter.BLACKLIST_USER.remove(ids)
+    msg = await message.reply(f">**Pengguna: {ids} dihapus ke blacklist.**")
+    await asyncio.sleep(1)
+    return await msg.delete()
+
+"""
+Mau ngapain hayo liat kesini wkwkwkkwkwkwkwk
+"""
+
+@app.on_message(filters.incoming & filters.group & ~filters.bot & ~filters.via_bot, group=ankes_group)
+async def handle_deleter(client, message):
+    if message.chat.id not in await dB.get_list_from_var(client.me.id, "CHAT_ANTIGCAST"):
+        return
+    await Deleter.setup_antigcast(client, message)
+    await Deleter.deleter(client, message)
+
+
+__MODULE__ = "Anti-Gcast"
+__HELP__ = """
+<blockquote expandable>
+<b>★ /protect or /antigcast</b> [on/off] - To enable or disable antigcast.
+
+<b>★ /addblack [reply user/username] - Add user to blacklist.
+<b>★ /delblack [userID/username] - Delete user from blacklist.
+<b>★ /listblack - To see user from blacklist database.
+<b>★ /clearblack - For delete all user from blacklist database.
+
+<b>★ /free [reply user/username] - Add user to whitelist.
+<b>★ /unfree [userID/username] - Delete user from whitelist.
+<b>★ /listwhite - To see user from whitelist database.
+<b>★ /clearwhite - For delete all user from whitelist database.
+
+**If admin messages are deleted by bots after enabling /antigcast on .
+Just type /reload to refresh admin list**</blockquote>
+"""
