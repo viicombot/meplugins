@@ -220,15 +220,15 @@ __HELP__ = """
 <blockquote expandable>
 <b>★ /protect or /antigcast</b> [on/off] - To enable or disable antigcast.
 
-<b>★ /addblack [reply user/username] - Add user to blacklist.
-<b>★ /delblack [userID/username] - Delete user from blacklist.
-<b>★ /listblack - To see user from blacklist database.
-<b>★ /clearblack - For delete all user from blacklist database.
+<b>★ /addblack</b> [reply user/username] - Add user to blacklist.
+<b>★ /delblack</b> [userID/username] - Delete user from blacklist.
+<b>★ /listblack</b> - To see user from blacklist database.
+<b>★ /clearblack</b> - For delete all user from blacklist database.
 
-<b>★ /free [reply user/username] - Add user to whitelist.
-<b>★ /unfree [userID/username] - Delete user from whitelist.
-<b>★ /listwhite - To see user from whitelist database.
-<b>★ /clearwhite - For delete all user from whitelist database.
+<b>★ /free</b> [reply user/username] - Add user to whitelist.
+<b>★ /unfree</b> [userID/username] - Delete user from whitelist.
+<b>★ /listwhite</b> - To see user from whitelist database.
+<b>★ /clearwhite</b> - For delete all user from whitelist database.
 
 **If admin messages are deleted by bots after enabling /antigcast on .
 Just type /reload to refresh admin list**</blockquote>
