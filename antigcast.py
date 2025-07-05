@@ -233,7 +233,7 @@ async def addword_blacklist(_, message):
         return await message.reply(">**Balas ke pesan atau berikan pesan untuk diblacklist.**")
     if text is None:
         return await message.reply(">**Pesan tidak memiliki teks untuk diblacklist.**")
-    black = await addword_blacklist(chat_id, text)
+    black = await blacklistword(chat_id, text)
     msg = await message.reply(f">**Kata dimasukkan ke blacklist:**\n{black}")
     await asyncio.sleep(1)
     return await msg.delete()
@@ -264,7 +264,7 @@ async def delword_blacklist(_, message):
 @app.on_message(filters.command(["listbl"]) & ~BANNED_USERS)
 @ONLY_GROUP
 @ONLY_ADMIN
-async def listwordblacklist(client, message):
+async def listwordblacklist(_, message):
     chat_id = message.chat.id
     list_text = await dB.get_var(chat_id, "delete_word")
     if list_text is None:
