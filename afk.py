@@ -99,7 +99,7 @@ async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, dat
     return await reply_afk_message(message, afktype, data, caption, user_id, reply_markup)
 
 @app.on_message(filters.command("afk") & ~BANNED_USERS)
-async def active_afk(client, message):
+async def active_afk(_, message):
     if message.sender_chat:
         return await message.reply_text(afk_1)
 
@@ -177,7 +177,7 @@ async def active_afk(client, message):
 
 
     
-@app.on_message(command("AFKDEL_COMMAND") & filters.group)
+@app.on_message(filters.command("afkdel") & filters.group)
 @ONLY_ADMIN
 async def afkdel_state(_, message):
     if not message.from_user:
