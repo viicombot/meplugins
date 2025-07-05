@@ -11,6 +11,21 @@ from utils.misc import SUDOERS
 
 from pyrogram import filters, errors
 
+async def blacklistword(chat_id, text):
+    list_text = await dB.get_var(chat_id, "delete_word") or []
+    if text not in list_text:
+        list_text.append(text)
+        await dB.set_var(chat_id, "delete_word", list_text)
+    return text
+
+
+async def removeword(chat_id, text):
+    list_text = await dB.get_var(chat_id, "delete_word") or []
+    if text in list_text:
+        list_text.remove(text)
+        await dB.set_var(chat_id, "delete_word", list_text)
+        return text
+    return None
 
 @app.on_message(filters.command(["protect", "antigcast"]) & ~BANNED_USERS)
 @ONLY_GROUP
@@ -27,7 +42,7 @@ async def ankestools(_, message):
             return await message.reply(">**Protect sudah diaktifkan**")
         await dB.set_var(chat_id, "PROTECT", jk)
         Deleter.SETUP_CHATS.add(chat_id)
-        return await message.reply(f">**Berhasil mengatur protect menjadi {jk}.**")
+        return await message.reply(f">**Berhasil mengatur protect menjadi {jk}.**\n\n**If admin messages are deleted by bots after enabling /antigcast on .\nJust type /reload to refresh admin list**")
     elif jk in ["Off", "off"]:
         if status is None:
             return await message.reply(">**Protect belum diaktifkan**")
@@ -203,6 +218,68 @@ async def _(client, message):
     await asyncio.sleep(1)
     return await msg.delete()
 
+
+@app.on_message(filters.command(["bl"]) & ~BANNED_USERS)
+@ONLY_GROUP
+@ONLY_ADMIN
+async def addword_blacklist(_, message):
+    reply = message.reply_to_message
+    chat_id = message.chat.id
+    if reply:
+        text = reply.text or reply.caption
+    elif len(message.command) > 1:
+        text = message.text.split(None, 1)[1]
+    else:
+        return await message.reply(">**Balas ke pesan atau berikan pesan untuk diblacklist.**")
+    if text is None:
+        return await message.reply(">**Pesan tidak memiliki teks untuk diblacklist.**")
+    black = await addword_blacklist(chat_id, text)
+    msg = await message.reply(f">**Kata dimasukkan ke blacklist:**\n{black}")
+    await asyncio.sleep(1)
+    return await msg.delete()
+
+
+
+@app.on_message(filters.command(["unbl"]) & ~BANNED_USERS)
+@ONLY_GROUP
+@ONLY_ADMIN
+async def delword_blacklist(_, message):
+    reply = message.reply_to_message
+    chat_id = message.chat.id
+    if reply:
+        text = reply.text or reply.caption
+    elif len(message.command) > 1:
+        text = message.text.split(None, 1)[1]
+    else:
+        return await message.reply(">**Balas ke pesan atau berikan pesan untuk dihapus dari blacklist.**")
+    if text is None:
+        return await message.reply(">**Pesan tidak memiliki teks untuk dihapus dari blacklist.**")
+    black = await removeword(chat_id, text)
+    if black is not None:
+        return await message.reply(f">**Kata dihapus dari blacklist:**\n{black}")
+    else:
+        return await message.reply(">**Kata tidak ditemukan di blacklist.**")
+
+
+@app.on_message(filters.command(["listbl"]) & ~BANNED_USERS)
+@ONLY_GROUP
+@ONLY_ADMIN
+async def listwordblacklist(client, message):
+    chat_id = message.chat.id
+    list_text = await dB.get_var(chat_id, "delete_word")
+    if list_text is None:
+        return await message.reply(">**Belum ada pesan yg diblacklist.**")
+    msg = f"<blockquote expandable>**Daftar Blacklist Di {message.chat.title}:**\n"
+    for num, text in enumerate(list_text, 1):
+        msg += f"{num}. {text}\n"
+    msg += "</blockquote>"
+    try:
+        return await message.reply(msg)
+    except errors.MessageTooLong:
+        link = await pastebin.paste(msg)
+        return await message.reply(link, disable_web_page_preview=True)
+
+
 """
 Mau ngapain hayo liat kesini wkwkwkkwkwkwkwk
 """
@@ -229,6 +306,10 @@ __HELP__ = """
 <b>★ /unfree</b> [userID/username] - Delete user from whitelist.
 <b>★ /listwhite</b> - To see user from whitelist database.
 <b>★ /clearwhite</b> - For delete all user from whitelist database.
+
+<b>★ /bl</b> [text/reply text] - Add text to blacklist.
+<b>★ /unbl</b> - Delete text from database blacklist.
+<b>★ /listbl</b> - See text from database blacklist.
 
 **If admin messages are deleted by bots after enabling /antigcast on .
 Just type /reload to refresh admin list**</blockquote>
