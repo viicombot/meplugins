@@ -35,7 +35,8 @@ async def jawab_asah_otak(_, message):
     jawaban_benar = soal["jawaban"].lower()
     user_id = message.from_user.id
     point_user = await dB.get_var(user_id, "POINT_ASAHOTAK") or 0
-
+    if text.startswith("/"):
+        return
     if text.lower() == "nyerah":
         del chat_asah_otak[chat_id]
         return await message.reply_text(
