@@ -16,6 +16,8 @@ async def downloader_cmd(client, message):
         )
     if not arg.startswith("https"):
         return await message.reply("><b>Only link supported.</b>")
+    if message.sender_chat:
+        return await message.reply(">**Dont use anonymous account.**")
     proses = await message.reply(">**Getting request url...**")
     await proses.edit(">**Wait a minute this takes some time...**")
 
