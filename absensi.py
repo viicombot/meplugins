@@ -78,7 +78,7 @@ async def hadir_callback(client, callback_query):
         data = [u for u in data if u["user_id"] != user_id]
     else:
         now_time = datetime.now(pytz.timezone("Asia/Jakarta")).strftime("%H:%M")
-        data.append({"user_id": user_id, "name": name, "time": now_time})
+        data_dict[chat_id].append({"user_id": user_id, "name": name, "time": now_time})
 
     data = sorted(data, key=lambda x: x["time"])
     try:
