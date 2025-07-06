@@ -93,7 +93,7 @@ async def metaai_cmd(client, message):
 
             if not photo_group and not video_group:
                 return await proses.edit(">**No media found.**")
-            await update_user_data(client, message.from_user.id, "metaaixquery", True)
+            await update_user_data(client, message.from_user.id, "metaaiquery", True)
             await proses.delete()
             return await message.reply(
                 f">**Successfully sent {foto + video} media**\n📸 Photos: `{foto}` | 🎥 Videos: `{video}`\n{err}"
@@ -105,7 +105,7 @@ async def metaai_cmd(client, message):
             if r.status_code != 200:
                 return await message.reply(">**Please try again later, maybe server is down.**")
             data = r.json()
-            await update_user_data(client, message.from_user.id, "metaaixquery", True)
+            await update_user_data(client, message.from_user.id, "metaaiquery", True)
             await proses.delete()
             return await message.reply(data.get("result"))
 
