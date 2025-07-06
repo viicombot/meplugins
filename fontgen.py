@@ -123,7 +123,7 @@ async def handle_pagination(_, callback_query):
         return await callback_query.message.edit_reply_markup(InlineKeyboardMarkup(PAGE_1))
 
 
-@app.on_callback_query(filters.regex("^fontclick\+"))
+@app.on_callback_query(filters.regex(r"^fontclick\+"))
 async def apply_font(_, callback_query):
     await callback_query.answer()
     _, font_key = callback_query.data.split("+", 1)
