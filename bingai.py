@@ -31,8 +31,10 @@ async def bingai_cmd(client, message):
         return await message.reply_text(">**Unable to use the channel account.**")
     user_id = message.from_user.id
     user_limit = await dB.get_var(user_id, "LIMIT_BING") or 0
+    if user_limit >= 6:
+        return await message.reply_text(">**Your limit has been reached: 6\nPlease try again tomorrow.**")
     pros = await message.reply(
-        f"><b>Proses generate <code>{prompt}</code> ..</b>"
+        f"<blockquote expandable><b>Proses generate <code>{prompt}</code> ..</b></blockquote>"
     )
     folder_name = f"downloads/{user_id}/"
     try:
@@ -50,6 +52,8 @@ async def bingai_cmd(client, message):
                     media=media_group,
                     reply_to_message_id=message.id,
                 )
+                new_limit = 1 + user_limit
+                await dB.set_var(user_id, "LIMIT_BING", new_limit)
                 await dB.add_to_var(client.me.id, "EXTRA_PLUGINS", user_id)
 
             await pros.delete()
