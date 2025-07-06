@@ -4,7 +4,7 @@ from pyrogram import filters
 from core import app
 from config import BANNED_USERS
 from utils.database import dB
-from .query_group import game_group, tlirik_group, tbendera_group, tkalimat_group, ttekateki_group
+from utils.query_group import game_group, tlirik_group, tbendera_group, tkalimat_group, ttekateki_group
 
 __MODULE__ = "Game"
 __HELP__ = """

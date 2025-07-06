@@ -9,7 +9,7 @@ from utils.functions import Tools
 from utils.keyboard import Button
 from logs import LOGGER
 from utils.decorators import ONLY_GROUP, ONLY_ADMIN
-from .query_group import filter_group
+from utils.query_group import filter_group
 
 from config import BANNED_USERS
 

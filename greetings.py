@@ -9,7 +9,7 @@ from utils.functions import Tools
 from utils.keyboard import Button
 from utils.decorators import ONLY_GROUP, ONLY_ADMIN
 from utils.misc import SUDOERS
-from .query_group import goodbye_group, welcome_group
+from utils.query_group import goodbye_group, welcome_group
 
 
 @app.on_message(filters.command(["setwelcome", "addwelcome"]) & ~config.BANNED_USERS)

@@ -5,7 +5,7 @@ from utils import pastebin
 from utils.deleter import Deleter, VerifyAnkes
 from utils.decorators import ONLY_GROUP, ONLY_ADMIN
 from utils.database import dB
-from .query_group import ankes_group
+from utils.query_group import ankes_group
 from config import BANNED_USERS
 from utils.misc import SUDOERS
 

@@ -11,7 +11,7 @@ from utils.decorators import ONLY_ADMIN
 from utils.functions import Tools
 from utils.keyboard import Button
 from strings import command
-from .query_group import afk_group
+from utils.query_group import afk_group
 
 __MODULE__ = "Afk"
 __HELP__ = """
