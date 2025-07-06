@@ -66,7 +66,7 @@ Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
 
 
 
-@app.on_callback_query(filters.regex("^Hadir"))
+@app.on_callback_query(filters.regex(r"^Hadir"))
 async def hadir_callback(client, callback_query):
     user = callback_query.from_user
     user_id = user.id
@@ -93,7 +93,7 @@ Waktu dalam timezone WIB (UTC+7).
 Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
 
         keyboard = ikb([[("☑️  Hadir", "Hadir")]])
-        await callback_query.message.edit_text(text, reply_markup=keyboard)
+        await callback_query.edit_message_text(text, reply_markup=keyboard)
     except Exception:
         print(f"ERROR: {traceback.format_exc()}")
 
