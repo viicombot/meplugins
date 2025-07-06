@@ -15,7 +15,9 @@ __HELP__ = """
 
 <b>★ /tagadmins</b> or <b>★ /admins</b>[text/reply text] - For tag all admins in your group.
 
-<b>★ /cancel</b> - For stop mention progress.</blockquote>
+<b>★ /cancel</b> - For stop mention progress.
+
+**Note: This member tag feature will automatically turn off within 5 minutes.**</blockquote>
 """
 
 def random_emoji():
@@ -83,7 +85,7 @@ async def tagall_cmd(client, message):
             active_tasks.pop(chat_id, None)
 
     try:
-        await asyncio.wait_for(tag_members(), timeout=20)
+        await asyncio.wait_for(tag_members(), timeout=300)
     except asyncio.TimeoutError:
         active_tasks.pop(chat_id, None)
         await proses.edit(">⏰ Task timeout after 5 minutes!")
