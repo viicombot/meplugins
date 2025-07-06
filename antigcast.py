@@ -288,6 +288,8 @@ Mau ngapain hayo liat kesini wkwkwkkwkwkwkwk
 async def handle_deleter(client, message):
     if message.chat.id not in await dB.get_list_from_var(client.me.id, "CHAT_ANTIGCAST"):
         return
+    if message.sender_chat:
+        return
     await Deleter.setup_antigcast(client, message)
     await Deleter.deleter(client, message)
 

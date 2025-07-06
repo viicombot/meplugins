@@ -206,7 +206,7 @@ async def afk_watcher_func(client, message):
     user_mention = message.from_user.mention
 
     if message.entities:
-        possible = ["/afk", f"/afk@{client.me.username}", "afk"]
+        possible = ["/afk", f"/afk@{client.me.username}", "!afk"]
         message_text = message.text or message.caption
         for entity in message.entities:
             if entity.type == enums.MessageEntityType.BOT_COMMAND:
