@@ -19,6 +19,8 @@ __HELP__ = """
 
 <b>★ /tebakbendera</b> - Play tebak bendera game, test your brains.
 
+<b>★ /pointgame</b> - Check 10 top score game. 
+
 Type `nyerah` if you fool
 Type `skip-game` for next question</blockquote>
 """
@@ -258,3 +260,39 @@ async def jawab_tekateki(client, message):
         return await message.reply_text(msg)
     else:
         await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
+
+
+@app.on_message(filters.command("pointgame") & ~BANNED_USERS)
+async def leaderboard_game(client, message):
+    user_ids = await dB.get_list_from_var(client.me.id, "DATAGAME")
+    if not user_ids:
+        return await message.reply_text("❌ Belum ada data pemain game.")
+
+    leaderboard = []
+    for user_id in user_ids:
+        total = 0
+        for key in [
+            "POINT_ASAHOTAK", "POINT_LIRIK", "POINT_BENDERA",
+            "POINT_KALIMAT", "POINT_TEKATEKI"
+        ]:
+            total += await dB.get_var(user_id, key) or 0
+        leaderboard.append((user_id, total))
+
+    top10 = sorted(leaderboard, key=lambda x: x[1], reverse=True)[-10:]
+    top10 = list(reversed(top10))
+
+    emoji_rank = [
+        "🔟", "9️⃣", "8️⃣", "7️⃣", "6️⃣",
+        "5️⃣", "4️⃣", "3️⃣", "🥈", "🥇"
+    ]
+
+    text = "**🏆 Peringkat 10 Besar Game:**\n\n"
+    for i, (uid, point) in enumerate(top10):
+        try:
+            user = await client.get_users(uid)
+            name = user.mention
+        except:
+            name = f"`{uid}`"
+        text += f"{emoji_rank[i]} {name} - **{point}** poin\n"
+
+    return await message.reply_text(text)

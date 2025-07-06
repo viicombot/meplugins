@@ -9,7 +9,8 @@ from logs import LOGGER
 
 from pyrogram import filters, types
 from utils.bingtools import Bing
-from utils.database import dB
+from utils.decorators import Checklimit
+from utils.functions import update_user_data
 
 __MODULE__ = "Bing"
 __HELP__ = """
@@ -21,6 +22,7 @@ __HELP__ = """
 
 
 @app.on_message(filters.command(["bingai", "genai"]) & ~config.BANNED_USERS)
+@Checklimit("bingquery")
 async def bingai_cmd(client, message):
     prompt = client.get_text(message)
     if not prompt:
@@ -30,9 +32,6 @@ async def bingai_cmd(client, message):
     if message.sender_chat:
         return await message.reply_text(">**Unable to use the channel account.**")
     user_id = message.from_user.id
-    user_limit = await dB.get_var(user_id, "LIMIT_BING") or 0
-    if user_limit >= 6:
-        return await message.reply_text(">**Your limit has been reached: 6\nPlease try again tomorrow.**")
     pros = await message.reply(
         f"<blockquote expandable><b>Proses generate <code>{prompt}</code> ..</b></blockquote>"
     )
@@ -52,9 +51,7 @@ async def bingai_cmd(client, message):
                     media=media_group,
                     reply_to_message_id=message.id,
                 )
-                new_limit = 1 + user_limit
-                await dB.set_var(user_id, "LIMIT_BING", new_limit)
-                await dB.add_to_var(client.me.id, "EXTRA_PLUGINS", user_id)
+                await update_user_data(client, user_id, "bingquery", True)
 
             await pros.delete()
 
