@@ -1,5 +1,6 @@
 import config
 import pytz
+import traceback
 
 from pyrogram.helpers import ikb
 from pyrogram import filters
@@ -94,7 +95,7 @@ Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
         keyboard = ikb([[("☑️  Hadir", "Hadir")]])
         await callback_query.message.edit_text(text, reply_markup=keyboard)
     except Exception:
-        pass
+        print(f"ERROR: {traceback.format_exc()}")
 
 
 @app.on_message(filters.command("refresh") & ~config.BANNED_USERS)
