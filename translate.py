@@ -18,12 +18,17 @@ __HELP__ = """
     <b>★ /setlang</b> (lang code)</blockquote>
 """
 
+async def get_translate(chat_id):
+    data = await dB.get_var(chat_id, "_translate")
+    if data:
+        return data
+    return "id"
 
 @app.on_message(filters.command(["tr"]) & ~config.BANNED_USERS)
 async def tr_cmd(client, message):
     trans = Translator()
     user_id = message.from_user.id if message.from_user else message.sender_chat.id
-    bhs = await client.get_translate(user_id)
+    bhs = await get_translate(user_id)
     if message.reply_to_message:
         txt = message.reply_to_message.text or message.reply_to_message.caption
         src = await trans.detect(txt)
