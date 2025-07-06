@@ -79,7 +79,7 @@ async def clear_blackuser(_, message):
 async def add_approve(client, message):
     reply = message.reply_to_message
     chat_id = message.chat.id
-    if reply.sender_chat:
+    if reply and reply.sender_chat:
         return await message.reply(">**Gunakan perintah ini dengan membalas pesan pengguna!! Bukan akun anonymous.**")
     try:
         target = reply.from_user.id if reply else message.text.split()[1]
