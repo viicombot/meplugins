@@ -12,7 +12,7 @@ __MODULE__ = "ChatGpt"
 __HELP__ = """
 <blockquote expandable>
 **You can answer question to ChatGpt3** 
-    <b>★ /blackbox</b> (question) </blockquote>
+    <b>★ /ask</b> (question) </blockquote>
 """
 
 
