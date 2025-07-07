@@ -1,2 +1,1 @@
-gpytranslate
 geopy
