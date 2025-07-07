@@ -117,7 +117,6 @@ async def refresh_absen(_, message):
     chat_id = message.chat.id
     data = await dB.get_var(chat_id, "ABSENSI") or []
     data = sorted(data, key=lambda x: x["time"])
-
     absen_text = f"""{message.chat.title}
 Daftar hadir hari {date_str}.
 
