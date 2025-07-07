@@ -4,16 +4,27 @@ import traceback
 
 from pyrogram.helpers import ikb
 from pyrogram import filters
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from utils.decorators import ONLY_GROUP, ONLY_ADMIN
+from utils.database import dB
 from core import app
 
-data_dict = {}
+
+__MODULE__ = "Absensi"
+__HELP__ = """
+<blockquote expandable>
+**Show attendance for present users** 
+    <b>★ /mulai</b> (question) 
+
+**Refresh the attendance list if the previous message is drowned out** 
+    <b>★ /refresh</b></blockquote>
+"""
+
 
 def format_absen_list(data):
     if not data:
-        return "Belum ada yang hadir."
+        return "Belum ada yang absen."
     return "\n".join([
         f"{i+1}. {u['name']}  ({u['time']})." for i, u in enumerate(data)
     ])
@@ -57,13 +68,14 @@ async def mulai_absen(_, message):
     date_str = format_tanggal_indo(now)
     
     chat_id = message.chat.id
-    if chat_id not in data_dict:
-        data_dict[chat_id] = []
+    data = await dB.get_var(chat_id, "ABSENSI") or []
 
     absen_text = f"""{message.chat.title}
 Daftar hadir hari {date_str}.
 
-{format_absen_list(data_dict[chat_id])}
+<blockquote expandable>
+{format_absen_list(data)}
+</blockquote>
 
 Waktu dalam timezone WIB (UTC+7).
 Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
@@ -79,15 +91,15 @@ async def refresh_absen(_, message):
     now = datetime.now(pytz.timezone("Asia/Jakarta"))
     date_str = format_tanggal_indo(now)
     chat_id = message.chat.id
-    
-    if chat_id not in data_dict:
-        data_dict[chat_id] = []
+    data = await dB.get_var(chat_id, "ABSENSI") or []
+    data = sorted(data, key=lambda x: x["time"])
 
-    data = sorted(data_dict[chat_id], key=lambda x: x["time"])
     absen_text = f"""{message.chat.title}
 Daftar hadir hari {date_str}.
 
+<blockquote expandable>
 {format_absen_list(data)}
+</blockquote>
 
 Waktu dalam timezone WIB (UTC+7).
 Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
@@ -103,10 +115,8 @@ async def hadir_callback(client, callback_query):
     name = user.first_name if not user.last_name else f"{user.first_name} {user.last_name}"
     chat_id = callback_query.message.chat.id
 
-    if chat_id not in data_dict:
-        data_dict[chat_id] = []
+    data = await dB.get_var(chat_id, "ABSENSI") or []
 
-    data = data_dict[chat_id]
     existing = next((u for u in data if u["user_id"] == user_id), None)
     if existing:
         data = [u for u in data if u["user_id"] != user_id]
@@ -115,7 +125,7 @@ async def hadir_callback(client, callback_query):
         data.append({"user_id": user_id, "name": name, "time": now_time})
 
     data = sorted(data, key=lambda x: x["time"])
-    data_dict[chat_id] = data
+    await dB.set_var(chat_id, "ABSENSI", data)
 
     try:
         now = datetime.now(pytz.timezone("Asia/Jakarta"))
@@ -123,7 +133,9 @@ async def hadir_callback(client, callback_query):
         text = f"""{callback_query.message.chat.title}
 Daftar hadir hari {date_str}.
 
+<blockquote expandable>
 {format_absen_list(data)}
+</blockquote>
 
 Waktu dalam timezone WIB (UTC+7).
 Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
