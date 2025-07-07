@@ -108,6 +108,28 @@ Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
     return await message.reply(absen_text, reply_markup=keyboard)
 
 
+@app.on_message(filters.command("selesai") & ~config.BANNED_USERS)
+@ONLY_GROUP
+@ONLY_ADMIN
+async def refresh_absen(_, message):
+    now = datetime.now(pytz.timezone("Asia/Jakarta"))
+    date_str = format_tanggal_indo(now)
+    chat_id = message.chat.id
+    data = await dB.get_var(chat_id, "ABSENSI") or []
+    data = sorted(data, key=lambda x: x["time"])
+
+    absen_text = f"""{message.chat.title}
+Daftar hadir hari {date_str}.
+
+<blockquote expandable>
+{format_absen_list(data)}
+</blockquote>
+
+Waktu dalam timezone WIB (UTC+7).
+Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
+    return await message.reply(absen_text)
+
+
 @app.on_callback_query(filters.regex(r"^Hadir"))
 async def hadir_callback(client, callback_query):
     user = callback_query.from_user
