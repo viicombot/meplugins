@@ -141,6 +141,7 @@ Waktu dalam timezone WIB (UTC+7).
 Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
         
         keyboard = ikb([[("☑️  Hadir", "Hadir")]])
+        await dB.add_to_var(client.me.id, "ABSENSI_CHAT", chat_id)
         await callback_query.edit_message_text(text, reply_markup=keyboard)
     except Exception:
         print(f"ERROR: {traceback.format_exc()}")
