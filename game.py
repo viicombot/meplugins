@@ -58,40 +58,50 @@ async def update_point_user(client, chat_dict, chat_id, user_id, point_key, poin
 @app.on_message(filters.command(["tebakkalimat"]) & ~BANNED_USERS)
 async def tebak_kalimat(client, message):
     chat_id = message.chat.id
-    soal = random.choice(KALIMAT_SOAL)
-    chat_tebak_kalimat[chat_id] = soal
+    soal = chat_tebak_kalimat.get(chat_id)
+    if not soal:
+        soal = random.choice(KALIMAT_SOAL)
+        chat_tebak_kalimat[chat_id] = soal
     return await message.reply_text(f">💬 **Tebak Kalimat:**\n\n{soal['soal']}\n\n__Silahkan jawab pertanyaan diatas!\n\nKetik `nyerah` jika tidak tahu\nKetik `skip-tebakkalimat` untuk melewati soal.__")
 
 
 @app.on_message(filters.command(["tekateki"]) & ~BANNED_USERS)
 async def teka_teki(client, message):
     chat_id = message.chat.id
-    soal = random.choice(TEKATEKI_SOAL)
-    chat_teka_teki[chat_id] = soal
+    soal = chat_teka_teki.get(chat_id)
+    if not soal:
+        soal = random.choice(TEKATEKI_SOAL)
+        chat_teka_teki[chat_id] = soal
     return await message.reply_text(f">🧩 **Teka-Teki:**\n\n{soal['pertanyaan']}\n\n__Silahkan jawab pertanyaan diatas!\n\nKetik `nyerah` jika tidak tahu\nKetik `skip-tekateki` untuk melewati soal.__")
 
 
 @app.on_message(filters.command(["tebaklirik"]) & ~BANNED_USERS)
 async def tebak_lirik(client, message):
     chat_id = message.chat.id
-    soal = random.choice(LIRIK_SOAL)
-    chat_tebak_lirik[chat_id] = soal
+    soal = chat_tebak_lirik.get(chat_id)
+    if not soal:
+        soal = random.choice(LIRIK_SOAL)
+        chat_tebak_lirik[chat_id] = soal
     return await message.reply_text(f">🎵 **Tebak Lirik:**\n\n{soal['soal']}\n\n__Silahkan jawab pertanyaan diatas!\n\nKetik `nyerah` jika tidak tahu\nKetik `skip-tebaklirik` untuk melewati soal.__")
 
 
 @app.on_message(filters.command(["tebakbendera"]) & ~BANNED_USERS)
 async def tebak_bendera(client, message):
     chat_id = message.chat.id
-    soal = random.choice(BENDERA_SOAL)
-    chat_tebak_bendera[chat_id] = soal
+    soal = chat_tebak_bendera.get(chat_id)
+    if not soal:
+        soal = random.choice(BENDERA_SOAL)
+        chat_tebak_bendera[chat_id] = soal
     return await message.reply_text(f">🚩 **Tebak Bendera:**\n\n{soal['bendera']}\n\n__Silahkan jawab pertanyaan diatas!\n\nKetik `nyerah` jika tidak tahu\nKetik `skip-tebakbendera` untuk melewati soal.__")
 
 
 @app.on_message(filters.command(["asahotak", "asah-otak"]) & ~BANNED_USERS)
 async def start_asah_otak(client, message):
     chat_id = message.chat.id
-    soal = random.choice(SOAL_ASAH_OTAK)
-    chat_asah_otak[chat_id] = soal
+    soal = chat_asah_otak.get(chat_id)
+    if not soal:
+        soal = random.choice(SOAL_ASAH_OTAK)
+        chat_asah_otak[chat_id] = soal
     return await message.reply_text(f">🧠 **Asah Otak:**\n\n{soal['soal']}\n\n__Silahkan jawab pertanyaan diatas!\n\nKetik `nyerah` jika tidak tahu\nKetik `skip-asahotak` untuk melewati soal.__")
 
 
@@ -128,7 +138,7 @@ async def jawab_asah_otak(client , message):
         msg = await update_point_user(client, chat_asah_otak, chat_id, user_id, "POINT_ASAHOTAK", point, "asahotak")
         return await message.reply_text(msg)
     else:
-        return await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
+        return #await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
 
 
 @app.on_message(filters.incoming & filters.group & ~BANNED_USERS, group=tlirik_group)
@@ -162,7 +172,7 @@ async def jawab_lirik(client, message):
         msg = await update_point_user(client, chat_tebak_lirik, chat_id, user_id, "POINT_LIRIK", point, "tebaklirik")
         return await message.reply_text(msg)
     else:
-        await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
+        return #await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
 
 @app.on_message(filters.incoming & filters.group & ~BANNED_USERS, group=tbendera_group)
 async def jawab_bendera(client, message):
@@ -194,7 +204,7 @@ async def jawab_bendera(client, message):
         msg = await update_point_user(client, chat_tebak_bendera, chat_id, user_id, "POINT_BENDERA", point, "tebakbendera")
         return await message.reply_text(msg)
     else:
-        await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
+        return #await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
 
 
 @app.on_message(filters.incoming & filters.group & ~BANNED_USERS, group=tkalimat_group)
@@ -227,7 +237,7 @@ async def jawab_kalimat(client, message):
         msg = await update_point_user(client, chat_tebak_kalimat, chat_id, user_id, "POINT_KALIMAT", point, "tebakkalimat")
         return await message.reply_text(msg)
     else:
-        await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
+        return #await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
 
 @app.on_message(filters.incoming & filters.group & ~BANNED_USERS, group=ttekateki_group)
 async def jawab_tekateki(client, message):
@@ -259,7 +269,7 @@ async def jawab_tekateki(client, message):
         msg = await update_point_user(client, chat_teka_teki, chat_id, user_id, "POINT_TEKATEKI", point, "tekateki")
         return await message.reply_text(msg)
     else:
-        await message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
+        return #message.reply_text(">**❌ Jawaban kamu salah, coba mikir lagi yang bener.**")
 
 
 @app.on_message(filters.command("pointgame") & ~BANNED_USERS)
