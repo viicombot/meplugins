@@ -1,1 +1,3 @@
 geopy
+git+https://github.com/yasirarism/privatebin-api
+telegraph
