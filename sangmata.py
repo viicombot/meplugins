@@ -8,61 +8,54 @@ from pyrogram import filters, raw
 from utils.query_group import sangmata_group
 from utils.database import dB
 from utils.decorators import ONLY_ADMIN, ONLY_GROUP
-
 @app.on_message(
     filters.group & ~filters.bot & ~filters.via_bot,
     group=sangmata_group,
 )
 async def sang_mata(client, message):
-    if message.sender_chat or not await dB.get_var(message.chat.id, "SICEPU"):
+    if message.sender_chat or await dB.get_var(message.chat.id, "SICEPU"):
         return
-    if not await dB.cek_userdata(message.from_user.id):
-        return await dB.add_userdata(
-            message.from_user.id,
-            message.from_user.first_name,
-            message.from_user.last_name,
-            message.from_user.username,
-        )
-    _, first_name, lastname_before, usernamebefore = await dB.get_userdata(message.from_user.id)
-    msg = ""
-    if (
-        usernamebefore != message.from_user.username
-        or first_name != message.from_user.first_name
-        or lastname_before != message.from_user.last_name
-    ):
-        msg += f"<b>👀 {client.mention} SangMata\n\nPengguna : {message.from_user.mention} [<code>{message.from_user.id}</code>]</b>\n"
-    if usernamebefore != message.from_user.username:
-        usernamebefore = f"@{usernamebefore}" if usernamebefore else "<b>Tanpa Username</b>\n"
-        usernameafter = (
-            f"@{message.from_user.username}" if message.from_user.username else "<b>Tanpa Username</b>\n"
-        )
-        msg += f"<b>Mengubah username dari <code>{usernamebefore}</code> ke <code>{usernameafter}</code></b>.\n"
-        await dB.add_userdata(
-            message.from_user.id,
-            message.from_user.first_name,
-            message.from_user.last_name,
-            message.from_user.username,
-        )
-    if first_name != message.from_user.first_name:
-        msg += f"<b>Mengubah nama depan dari <code>{first_name}</code> menjadi <code>{message.from_user.first_name}</code>.</b>\n"
-        await dB.add_userdata(
-            message.from_user.id,
-            message.from_user.first_name,
-            message.from_user.last_name,
-            message.from_user.username,
-        )
-    if lastname_before != message.from_user.last_name:
-        lastname_before = lastname_before or "<b>Tanpa Nama Belakang</b>\n"
-        lastname_after = message.from_user.last_name or "<b>Tanpa Nama Belakang</b>\n"
-        msg += f"<b>Mengubah nama belakang dari <code>{lastname_before}</code> menjadi <code>{lastname_after}</code>.</b>\n"
-        await dB.add_userdata(
-            message.from_user.id,
-            message.from_user.first_name,
-            message.from_user.last_name,
-            message.from_user.username,
-        )
-    if msg != "":
+
+    user_id = message.from_user.id
+    first = message.from_user.first_name
+    last = message.from_user.last_name
+    username = message.from_user.username
+
+    if not await dB.cek_userdata(user_id):
+        await dB.add_userdata(user_id, first, last, username)
+        return
+
+    data = await dB.get_userdata(user_id)
+    if not data:
+        return
+
+    old_first = data["depan"]
+    old_last = data["belakang"]
+    old_username = data["username"]
+
+    changes = []
+
+    if old_username != username:
+        old_u = f"@{old_username}" if old_username else "<b>Tanpa Username</b>"
+        new_u = f"@{username}" if username else "<b>Tanpa Username</b>"
+        changes.append(f"<b>🔄 Mengubah username dari <code>{old_u}</code> ke <code>{new_u}</code></b>.")
+
+    if old_first != first:
+        changes.append(f"<b>🔄 Mengubah nama depan dari <code>{old_first}</code> menjadi <code>{first}</code>.</b>")
+
+    if old_last != last:
+        old_l = old_last or "<b>Tanpa Nama Belakang</b>"
+        new_l = last or "<b>Tanpa Nama Belakang</b>"
+        changes.append(f"<b>🔄 Mengubah nama belakang dari <code>{old_l}</code> menjadi <code>{new_l}</code>.</b>")
+
+    if changes:
+        msg = f"<b>👀 {client.mention} SangMata</b>\n\n"
+        msg += f"<b>Pengguna : {message.from_user.mention} [<code>{user_id}</code>]</b>\n"
+        msg += "\n".join(changes)
         await message.reply_text(msg, quote=True)
+
+        await dB.add_userdata(user_id, first, last, username)
+
 
 
 @app.on_message(filters.command("sangmata") & ~filters.bot & ~filters.via_bot)
