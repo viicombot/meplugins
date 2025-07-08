@@ -8,6 +8,8 @@ from pyrogram import filters, raw
 from utils.query_group import sangmata_group
 from utils.database import dB
 from utils.decorators import ONLY_ADMIN, ONLY_GROUP
+
+
 @app.on_message(
     filters.group & ~filters.bot & ~filters.via_bot,
     group=sangmata_group,
