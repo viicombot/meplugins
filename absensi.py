@@ -15,7 +15,10 @@ __MODULE__ = "Absensi"
 __HELP__ = """
 <blockquote expandable>
 **Show attendance for present users** 
-    <b>★ /mulai</b> (question) 
+    <b>★ /mulai</b>
+
+**Ended attendance for present users** 
+    <b>★ /selesai</b>
 
 **Refresh the attendance list if the previous message is drowned out** 
     <b>★ /refresh</b></blockquote>
