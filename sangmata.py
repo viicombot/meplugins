@@ -23,7 +23,7 @@ async def sang_mata(client, message):
             message.from_user.last_name,
             message.from_user.username,
         )
-    usernamebefore, first_name, lastname_before = await dB.get_userdata(message.from_user.id)
+    _, usernamebefore, first_name, lastname_before = await dB.get_userdata(message.from_user.id)
     msg = ""
     if (
         usernamebefore != message.from_user.username
