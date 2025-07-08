@@ -14,7 +14,7 @@ from utils.decorators import ONLY_ADMIN, ONLY_GROUP
     group=sangmata_group,
 )
 async def sang_mata(client, message):
-    if message.sender_chat or await dB.get_var(message.chat.id, "SICEPU"):
+    if message.sender_chat or not await dB.get_var(message.chat.id, "SICEPU"):
         return
     if not await dB.cek_userdata(message.from_user.id):
         return await dB.add_userdata(
