@@ -23,7 +23,7 @@ async def sang_mata(client, message):
             message.from_user.last_name,
             message.from_user.username,
         )
-    _, usernamebefore, first_name, lastname_before = await dB.get_userdata(message.from_user.id)
+    _, first_name, lastname_before, usernamebefore = await dB.get_userdata(message.from_user.id)
     msg = ""
     if (
         usernamebefore != message.from_user.username
@@ -114,7 +114,7 @@ async def history(client, message):
         else:
             await message.reply(name.text)
     user_info = await babu.resolve_peer(getbot)
-    return await babu.invoke(raw.functions.messagesDeleteHistory(peer=user_info, max_id=0, revoke=True))
+    return await babu.invoke(raw.functions.messages.DeleteHistory(peer=user_info, max_id=0, revoke=True))
 
 
 __MODULE__ = "SangMata"
