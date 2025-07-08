@@ -85,5 +85,6 @@ __HELP__ = """
     - tiktok
     - spotify
     - threads
+    - telegram (publik channel)
     - youtube</blockquote>
 """
