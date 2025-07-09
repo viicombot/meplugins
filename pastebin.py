@@ -142,7 +142,7 @@ async def wastepaste(_, message):
             remove(doc)
         link = await Tools.paste(content)
         reply_markup = ikb([[("Open Link", f"{link}", "url")], [("Share Link", f"https://telegram.me/share/url?url={link}", "url")]])
-        await message.reply(f"><b>Succesed paste to batbin</b>", reply_markup=reply_markup, disable_page_preview=True)
+        await message.reply(f"><b>Succesed paste to batbin</b>", reply_markup=reply_markup, disable_web_page_preview=True)
         return await proses.delete()
 
     except Exception:
