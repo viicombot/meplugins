@@ -2,9 +2,9 @@
 # Original code here https://github.com/yasirarism/MissKatyPyro/blob/master/misskaty/plugins/paste.py
 
 
-import privatebinapi
 import traceback
 import config
+import aiofiles
 
 from telegraph.aio import Telegraph
 
@@ -122,58 +122,29 @@ async def telegraph_paste(_, message):
 @app.on_message(filters.command(["paste"]) & ~config.BANNED_USERS)
 async def wastepaste(_, message):
     try:
-        reply = message.reply_to_message
-        target = str(message.command[0]).split("@", maxsplit=1)[0]
-        if not reply and len(message.command) < 2:
-            return await message.reply(
-                f"**Reply To A Message With /{target} or with command**", del_in=6
+        proses = await message.reply(">**Please wait...**")
+        if not message.reply_to_message:
+            return await proses.edit(f">**Please reply to message!!**")
+        r = message.reply_to_message
+        text = r.text or r.caption
+        if not text and not r.document:
+            return await proses.edit(
+                f">**Please reply to message text or document!!**"
             )
-
-        msg = await message.reply("`Pasting to YasirBin...`")
-        data = ""
-        limit = 1024 * 1024
-        if reply and reply.document:
-            if reply.document.file_size > limit:
-                return await msg.edit(
-                    f"**You can only paste files smaller than {youtube.humanbytes(limit)}.**"
-                )
-            if not pattern.search(reply.document.mime_type):
-                return await msg.edit("**Only text files can be pasted.**")
-            file = await reply.download()
-            try:
-                with open(file, "r") as text:
-                    data = text.read()
-                remove(file)
-            except UnicodeDecodeError:
-                try:
-                    remove(file)
-                except:
-                    pass
-                return await msg.edit("`File Not Supported !`")
-        elif reply and (reply.text or reply.caption):
-            data = reply.text or reply.caption
-        elif not reply and len(message.command) >= 2:
-            data = message.text.split(None, 1)[1]
-
-        if message.from_user:
-            if message.from_user.username:
-                uname = f"@{message.from_user.username} [{message.from_user.id}]"
-            else:
-                uname = f"[{message.from_user.first_name}](tg://user?id={message.from_user.id}) [{message.from_user.id}]"
+        if text:
+            content = str(text)
         else:
-            uname = message.sender_chat.title
+            if r.document.file_size > 40000:
+                return await proses.edit(f">**Maximum size is 40000!!**")
+            doc = await r.download()
+            async with aiofiles.open(doc, mode="r") as f:
+                content = await f.read()
+            remove(doc)
+        link = await Tools.paste(content)
+        reply_markup = ikb([[("Open Link", f"{link}", "url")], [("Share Link", f"https://telegram.me/share/url?url={link}", "url")]])
+        await message.reply(f"><b>Succesed paste to batbin</b>", reply_markup=reply_markup, disable_page_preview=True)
+        return await proses.delete()
 
-        try:
-            url = await privatebinapi.send_async("https://bin.yasirweb.eu.org", text=data, expiration="1week", formatting="markdown")
-        except Exception as e:
-            return await msg.edit(f"ERROR: {e}")
-
-        if not url:
-            return await msg.edit("Text Too Short Or File Problems")
-        button = ikb([[("Open Link", f"{url['full_url']}", "url")], [("Share Link", f"https://telegram.me/share/url?url={url['full_url']}", "url")]])
-
-        pasted = f"**Successfully pasted your data to YasirBin<a href='{url}'>.</a>\n\nPaste by {uname}**"
-        return await msg.edit(pasted, reply_markup=button, disable_web_page_preview=True)
     except Exception:
         print(f"ERROR: {traceback.format_exc()}")
 
