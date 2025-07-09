@@ -125,21 +125,24 @@ async def wastepaste(_, message):
         proses = await message.reply(">**Please wait...**")
         if not message.reply_to_message:
             return await proses.edit(f">**Please reply to message!!**")
-        r = message.reply_to_message
-        text = r.text or r.caption
-        if not text and not r.document:
+        reply = message.reply_to_message
+        if not reply and len(message.command) < 2:
             return await proses.edit(
                 f">**Please reply to message text or document!!**"
             )
-        if text:
-            content = str(text)
-        else:
-            if r.document.file_size > 40000:
+        if reply and reply.document: 
+            if reply.document.file_size > 40000:
                 return await proses.edit(f">**Maximum size is 40000!!**")
-            doc = await r.download()
+            if not pattern.search(reply.document.mime_type):
+                return await proses.edit("**Only text files can be pasted.**")
+            doc = await reply.download()
             async with aiofiles.open(doc, mode="r") as f:
                 content = await f.read()
             remove(doc)
+        elif reply and (reply.text or reply.caption):
+            content = reply.text or reply.caption
+        elif not reply and len(message.command) >= 2:
+            content = message.text.split(None, 1)[1]
         link = await Tools.paste(content)
         reply_markup = ikb([[("Open Link", f"{link}", "url")], [("Share Link", f"https://telegram.me/share/url?url={link}", "url")]])
         await message.reply(f"><b>Succesed paste to batbin</b>", reply_markup=reply_markup, disable_web_page_preview=True)
