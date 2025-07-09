@@ -170,7 +170,7 @@ async def wastepaste(_, message):
 
         if not url:
             return await msg.edit("Text Too Short Or File Problems")
-        button = ikb([[("Open Link", f"url['full_url']", "url")], [("Share Link", f"https://telegram.me/share/url?url={url['full_url']}", "url")]])
+        button = ikb([[("Open Link", f"{url['full_url']}", "url")], [("Share Link", f"https://telegram.me/share/url?url={url['full_url']}", "url")]])
 
         pasted = f"**Successfully pasted your data to YasirBin<a href='{url}'>.</a>\n\nPaste by {uname}**"
         return await msg.edit(pasted, reply_markup=button, disable_web_page_preview=True)
