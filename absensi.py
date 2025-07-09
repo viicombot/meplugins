@@ -127,8 +127,7 @@ Daftar hadir hari {date_str}.
 {format_absen_list(data)}
 </blockquote>
 
-Waktu dalam timezone WIB (UTC+7).
-Yang telah hadir, silakan klik tombol HADIR di bawah ini."""
+Waktu dalam timezone WIB (UTC+7)."""
     return await message.reply(absen_text)
 
 
