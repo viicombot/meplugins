@@ -303,7 +303,6 @@ async def user_info(client, message):
 
         if getattr(full_user, "linked_chat_id", None):
             msg += f"      <b>linked_chat:</b> <b><a href='https://t.me/c/{full_user.linked_chat_id}/1'>Linked Chat</a></b>\n"
-        msg += "</blockquote>"
         chat_photo = from_user.photo
         if chat_photo:
             photo_date = None
@@ -314,7 +313,7 @@ async def user_info(client, message):
                 profile_vid = profile_photo.video_sizes[0] if profile_photo.video_sizes else None
                 photo_date = datetime.fromtimestamp(profile_photo.date).strftime("%d-%m-%Y %H:%M:%S")
             if photo_date:
-                msg += f"<b>Upload Date</b>: {photo_date}\n"
+                msg += f"      <b>upload_date:</b>: `{photo_date}`\n"
             if profile_vid:
                 file_obj = io.BytesIO()
                 async for chunk in client.stream_media(
@@ -333,6 +332,7 @@ async def user_info(client, message):
                 ):
                     file_obj.write(chunk)
                 file_obj.name = "profile_vid_.mp4"
+                msg += "</blockquote>"
                 return await message.reply_video(
                     video=file_obj,
                     caption=msg,
@@ -345,12 +345,14 @@ async def user_info(client, message):
                 ):
                     file_obj.write(chunk)
                 file_obj.name = "profile_pic_.jpg"
+                msg += "</blockquote>"
                 return await message.reply_photo(
                     photo=file_obj,
                     caption=msg,
                     reply_markup=buttons,
                 )
         else:
+            msg += "</blockquote>"
             return await message.reply(msg, reply_markup=buttons)
     except Exception:
         LOGGER.error(f"ERROR: {traceback.format_exc()}")
