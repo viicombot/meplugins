@@ -177,7 +177,7 @@ async def user_info(client, message):
                             )
                         )
                         creation_date = created.text
-                    except Exception:
+                    except RuntimeError:
                         creation_date = "-"
                     interact_with_to_delete.clear()
                     small_user = from_user.users[0]
@@ -187,13 +187,13 @@ async def user_info(client, message):
                     is_bot = small_user.bot
                     premium = small_user.premium
                     from_user = User._parse(client, small_user)
-                    await client.invoke(
+                    await client2.invoke(
                         raw.functions.messages.DeleteHistory(
                             peer=xin, max_id=0, revoke=True
                         )
                     )
         except Exception:
-            LOGGER.error(f"ERROR: {traceback.format_exc()}")
+            #LOGGER.error(f"ERROR: {traceback.format_exc()}")
             from_user = None
 
         if from_user is None:
@@ -206,7 +206,7 @@ async def user_info(client, message):
                 dc_id = getattr(full_user.chat_photo, "dc_id", "-")
                 from_user = Chat._parse_channel_chat(client, small_user)
             except Exception:
-                LOGGER.error(f"ERROR: {traceback.format_exc()}")
+                #LOGGER.error(f"ERROR: {traceback.format_exc()}")
                 from_user = None
 
         if not from_user:
