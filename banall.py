@@ -47,6 +47,10 @@ async def exec_banall(client, message):
                     await asyncio.sleep(0.5)
                 except errors.FloodWait as e:
                     await asyncio.sleep(e.value)
+                    await client.ban_chat_member(chat_id, member.user.id)
+                    banned += 1
+                except errors.UserAdminInvalid:
+                    continue
                 except Exception as e:
                     print(f"[ERROR] Ban {member.user.id}: {e}")
                     continue
