@@ -193,6 +193,8 @@ async def cekonline_cmd(client, message):
     try:
         link = await client.export_chat_invite_link(chat_id)
         await client2.join_chat(link)
+    except errors.UserAlreadyParticipant:
+        pass
     except Exception as err:
         print(f"ERROR: {traceback.format_exc()}")
         return await proses.edit(f">**Failed, maybe i dont have enough permission: {str(err)}")
@@ -235,6 +237,8 @@ async def cekmsg_cmd(client, message):
     try:
         link = await client.export_chat_invite_link(chat_id)
         await client2.join_chat(link)
+    except errors.UserAlreadyParticipant:
+        pass
     except Exception as err:
         print(f"ERROR: {traceback.format_exc()}")
         return await proses.edit(f">**Failed, maybe i dont have enough permission: {str(err)}")
