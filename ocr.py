@@ -1,4 +1,5 @@
 import requests
+import traceback
 import os
 import config
 
@@ -40,6 +41,8 @@ async def ocr_cmd(_, message):
         req = requests.get(
             f"https://script.google.com/macros/s/AKfycbwURISN0wjazeJTMHTPAtxkrZTWTpsWIef5kxqVGoXqnrzdLdIQIfLO7jsR5OQ5GO16/exec?url={url}"
         ).json()
+        print(url)
         return await proses.edit(f"><code>{req['text']}</code>")
     except Exception as e:
+        print(traceback.format_exc())
         return await proses.edit(f">**ERROR:** {str(e)}")
