@@ -191,7 +191,7 @@ async def cekonline_cmd(client, message):
     ]:
         await client.unban_chat_member(chat_id, client2.me.id)
     try:
-        link = await client.get_chat_invite_link(chat_id)
+        link = await client.export_chat_invite_link(chat_id)
         await client2.join_chat(link)
     except Exception as err:
         print(f"ERROR: {traceback.format_exc()}")
@@ -233,7 +233,7 @@ async def cekmsg_cmd(client, message):
     ]:
             await client.unban_chat_member(chat_id, client2.me.id)
     try:
-        link = await client.get_chat_invite_link(chat_id)
+        link = await client.export_chat_invite_link(chat_id)
         await client2.join_chat(link)
     except Exception as err:
         print(f"ERROR: {traceback.format_exc()}")
