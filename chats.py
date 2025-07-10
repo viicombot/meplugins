@@ -3,6 +3,7 @@
 
 import config
 import asyncio
+import traceback
 
 from core import app, userbot
 from pyrogram import filters, errors, enums
@@ -192,8 +193,9 @@ async def cekonline_cmd(client, message):
     try:
         link = await client.get_chat_invite_link(chat_id)
         await client2.join_chat(link)
-    except Exception:
-        return await proses.edit(f">**Failed, maybe i dont have enough permission")
+    except Exception as err:
+        print(f"ERROR: {traceback.format_exc()}")
+        return await proses.edit(f">**Failed, maybe i dont have enough permission: {str(err)}")
 
     try:
         member_online = await client2.get_chat_online_count(chat_id)
@@ -233,8 +235,9 @@ async def cekmsg_cmd(client, message):
     try:
         link = await client.get_chat_invite_link(chat_id)
         await client2.join_chat(link)
-    except Exception:
-        return await proses.edit(f">**Failed, maybe i dont have enough permission")
+    except Exception as err:
+        print(f"ERROR: {traceback.format_exc()}")
+        return await proses.edit(f">**Failed, maybe i dont have enough permission: {str(err)}")
 
     try:
         user = await client2.get_users(user_id)
