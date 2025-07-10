@@ -178,7 +178,6 @@ async def user_info(client, message):
                         )
                         creation_date = created.text
                     except Exception:
-                        LOGGER.error(f"ERROR: {traceback.format_exc()}")
                         creation_date = "-"
                     interact_with_to_delete.clear()
                     small_user = from_user.users[0]
@@ -197,7 +196,7 @@ async def user_info(client, message):
             LOGGER.error(f"ERROR: {traceback.format_exc()}")
             from_user = None
 
-        if not from_user:
+        if from_user is None:
             try:
                 from_user = await client.invoke(
                     raw.functions.channels.GetFullChannel(channel=(await client.resolve_peer(from_user_id)))
