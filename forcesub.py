@@ -86,12 +86,13 @@ Silahkan bergabung [disini]({invite_url}) dan tekan tombol **🙏🏻 Suarakan S
 @app.on_message(filters.command(["forcesubscribe", "fsub"]) & ~filters.private & ~config.BANNED_USERS)
 @ONLY_GROUP
 async def forsub_cmd(client, message):
-    user_status = (await client.get_chat_member(message.chat.id, message.from_user.id)).status
-    if user_status not in [enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER] or user_status not in SUDOERS:
-        return await message.reply(">**Setidaknya anda harus menjadi admin atau pemilik dari grup ini.**")
     chat_id = message.chat.id
     if len(message.command) < 2:
         return await message.reply(f">**Gunakan format /fsub @username untuk mengaktifkan wajib join ke saluran yang dituju, atau /fsub off untuk mematikan wajib join paksa.**")
+    user_status = (await client.get_chat_member(message.chat.id, message.from_user.id)).status
+    if user_status not in [enums.ChatMemberStatus.ADMINISTRATOR, enums.ChatMemberStatus.OWNER] or user_status not in SUDOERS:
+        print(user_status)
+        return await message.reply(">**Setidaknya anda harus menjadi admin atau pemilik dari grup ini.**")
     input_str = message.command[1]
     is_on = await dB.get_var(chat_id, "IS_FORCESUB")
     if input_str.lower() == "off":
