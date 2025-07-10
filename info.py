@@ -148,7 +148,7 @@ async def id_cmd(client, message):
     )
 
 
-@app.on_message(filters.command("id") & ~config.BANNED_USERS)
+@app.on_message(filters.command("info") & ~config.BANNED_USERS)
 async def user_info(client, message):
     try:
         from_user_id, from_user_name, user = extract_user(message)
