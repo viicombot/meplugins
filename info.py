@@ -262,10 +262,10 @@ async def user_info(client, message):
                 ]
             )
 
-        if getattr(full_user, "about", "-"):
+        if getattr(full_user, "about"):
             msg += f"      <b>about :</b> <code>{full_user.about}</code>\n"
 
-        if getattr(full_user, "common_chats_count", "-"):
+        if getattr(full_user, "common_chats_count"):
             msg += f"      <b>same_group:</b> <code>{full_user.common_chats_count}</code>\n"
 
         if isinstance(from_user, User) and message.chat.type in [
@@ -283,15 +283,15 @@ async def user_info(client, message):
 
         if len(msg) < 334:
             polos = getattr(
-                full_user, "settings", getattr(full_user, "available_reactions", "-")
+                full_user, "settings", getattr(full_user, "available_reactions")
             )
             if polos:
                 msg += f"      <b>reactions:</b> <code>{len(polos)}</code>\n"
 
-        if getattr(full_user, "online_count", "-"):
+        if getattr(full_user, "online_count"):
             msg += f"      <b>online_count:</b> <code>{full_user.online_count}</code>\n"
 
-        if getattr(full_user, "pinned_msg_id", "-"):
+        if getattr(full_user, "pinned_msg_id"):
             url_pin = (
                 f"tg://openmessage?user_id={full_user.id}&message_id={full_user.pinned_msg_id}"
                 if isinstance(full_user, raw.types.UserFull)
@@ -301,13 +301,13 @@ async def user_info(client, message):
                 f"      <b>pinned:</b> <b><a href='{url_pin}'>Pinned Message</a></b>\n"
             )
 
-        if getattr(full_user, "linked_chat_id", "-"):
+        if getattr(full_user, "linked_chat_id"):
             msg += f"      <b>linked_chat:</b> <b><a href='https://t.me/c/{full_user.linked_chat_id}/1'>Linked Chat</a></b>\n"
         chat_photo = from_user.photo
         if chat_photo:
             photo_date = None
             profile_photo = getattr(
-                full_user, "profile_photo", getattr(full_user, "chat_photo", "-")
+                full_user, "profile_photo", getattr(full_user, "chat_photo")
             )
             if profile_photo:
                 profile_vid = profile_photo.video_sizes[0] if profile_photo.video_sizes else "-"
