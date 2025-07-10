@@ -9,7 +9,7 @@ from logs import LOGGER
 from utils import pastebin
 
 
-__MODULE__ = "Deepseek AI"
+__MODULE__ = "Deepseek-AI"
 
 __HELP__ = """
 <blockquote expandable>

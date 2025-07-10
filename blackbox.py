@@ -11,7 +11,7 @@ BLACKBOX_CHAT_URL = "https://api.maelyn.sbs/api/blackbox/chat"
 BLACKBOX_IMAGE_URL = "https://api.maelyn.sbs/api/blackbox/image"
 BLACKBOX_IMAGINE_URL = "https://api.maelyn.sbs/api/blackbox/imagine"
 
-__MODULE__ = "Blackbox AI"
+__MODULE__ = "Blackbox-AI"
 
 __HELP__ = """
 <blockquote expandable>
