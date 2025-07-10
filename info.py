@@ -139,6 +139,7 @@ async def id_cmd(client, message):
             user_id = (await client.get_users(split)).id
             text += f"\n**Mentioned User ID:** `{user_id}`\n"
         except Exception:
+            LOGGER.error(f"ERROR: {traceback.format_exc()}")
             return await message.reply_text(f"**User tidak ditemukan.**")
 
     return await message.reply_text(
@@ -177,6 +178,7 @@ async def user_info(client, message):
                         )
                         creation_date = created.text
                     except Exception:
+                        LOGGER.error(f"ERROR: {traceback.format_exc()}")
                         creation_date = "-"
                     interact_with_to_delete.clear()
                     small_user = from_user.users[0]
@@ -192,6 +194,7 @@ async def user_info(client, message):
                         )
                     )
         except Exception:
+            LOGGER.error(f"ERROR: {traceback.format_exc()}")
             from_user = None
 
         if not from_user:
@@ -204,6 +207,7 @@ async def user_info(client, message):
                 dc_id = getattr(full_user.chat_photo, "dc_id", "-")
                 from_user = Chat._parse_channel_chat(client, small_user)
             except Exception:
+                LOGGER.error(f"ERROR: {traceback.format_exc()}")
                 from_user = None
 
         if not from_user:
