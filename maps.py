@@ -8,8 +8,10 @@ from pyrogram import filters
 __MODULE__ = "Maps"
 __HELP__ = """
 <blockquote expandable>
-**You get geolocation from prompt** 
-    <b>★ /maps</b> (location) </blockquote>
+<b>🗺️ Location Lookup</b>
+
+<b>★ /maps</b> (location name or address) – Get the geolocation on the map.
+</blockquote>
 """
 
 

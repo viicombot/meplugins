@@ -11,14 +11,16 @@ admins_tasks = {}
 __MODULE__ = "Mention"
 __HELP__ = """
 <blockquote expandable>
-<b>★ /tagall</b> or <b>★ /all</b> or <b>★ /utag</b> [text/reply text] - For tag members in your group.
+<b>📣 Mention Users</b>
 
-<b>★ /tagadmins</b> or <b>★ /admins</b>[text/reply text] - For tag all admins in your group.
+<b>★ /tagall</b> | <b>/all</b> | <b>/utag</b> [text/reply] – Mention all members.  
+<b>★ /tagadmins</b> | <b>/admins</b> [text/reply] – Mention all admins.  
+<b>★ /cancel</b> – Stop the mention process.
 
-<b>★ /cancel</b> - For stop mention progress.
-
-**Note: This member tag feature will automatically turn off within 5 minutes.**</blockquote>
+<i>Mentions automatically stop after 5 minutes.</i>
+</blockquote>
 """
+
 
 def random_emoji():
     emojis = "🍦 🎈 🎸 🌼 🌳 🚀 🎩 📷 💡 🏄‍♂️ 🎹 🚲 🍕 🌟 🎨 📚 🚁 🎮 🍔 🍉 🎉 🎵 🌸 🌈 🏝️ 🌞 🎢 🚗 🎭 🍩 🎲 📱 🏖️ 🛸 🧩 🚢 🎠 🏰 🎯 🥳 🎰 🛒 🧸 🛺 🧊 🛷 🦩 🎡 🎣 🏹 🧁 🥨 🎻 🎺 🥁 🛹".split(" ")

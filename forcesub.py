@@ -146,12 +146,15 @@ async def forsub_cmd(client, message):
 __MODULE__ = "Force-Subs"
 __HELP__ = """
 <blockquote expandable>
-**Enable forced subscription to a specific channel. You can also use channel ID like <code>-100xxxxxxxxxx</code>.**
-<b>★ /fsub @channel_username</b>  
+<b>🔗 Force Subscription</b>
 
-**Disable forced subscription.**
+<b>★ /fsub</b> @channel_username or <code>-100xxxxxxxxxx</code>  
+Enable forced subscription to a specific channel.
+
 <b>★ /fsub off</b>  
+Disable forced subscription.
 
-**Unmute all users that were muted due to not joining the required channel.**
-<b>★ /fsub clear</b>  </blockquote>
+<b>★ /fsub clear</b>  
+Unmute all users previously muted for not joining the required channel.
+</blockquote>
 """

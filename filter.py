@@ -241,22 +241,19 @@ async def FILTERS(_, message):
 
 
 __MODULE__ = "Filters"
+
 __HELP__ = """
 <blockquote expandable>
-**You can active auto reply message from this command**
-    <b>★ /savefilter</b> (name) (reply message)
 
-**View all saved filters message from your account** 
-    <b>★ /filters</b>
+📬 <b>Auto Reply Filters</b>
 
-**You can get the filter format from this command**
-    <b>★ /getfilter</b> (name) raw
+• <b>/savefilter</b> (keyword) (reply message) – Save a filter.  
+• <b>/filters</b> – View all active filters.  
+• <b>/getfilter</b> (name) raw – Get raw content of a filter.  
+• <b>/stopfilter</b> (name) – Remove a specific filter.  
+• <b>/stopfilter all</b> – Delete all filters in this chat.
 
-**You can stop filters message on chat if you want**
-    <b>★ /stopfilter</b> (name)
+<i>Supports markdown & custom response formatting.</i>
 
-**This command easy to delete all saved filters messages**
-    <b>★ /stopfilter all</b> 
-
-**See markdown and filling if you want costum message more.**</blockquote>
+</blockquote>
 """

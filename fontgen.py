@@ -6,11 +6,15 @@ from core import app
 from utils.fonts import Fonts
 
 __MODULE__ = "Fonts"
+
 __HELP__ = """
 <blockquote expandable>
-You can generate costum font for message text or caption just reply the message
 
-<b>★ /font</b> or <b>/fonts</b> [reply text/caption] - Generate costum font.</blockquote>
+🔤 <b>Stylish Fonts</b>
+
+• <b>/font</b> or <b>/fonts</b> [reply text] – Convert your text or caption into cool fonts.
+
+</blockquote>
 """
 
 

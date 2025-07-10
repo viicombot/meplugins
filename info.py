@@ -361,7 +361,9 @@ async def user_info(client, message):
 __MODULE__ = "Info"
 __HELP__ = """
 <blockquote expandable>
-<b>★ /id</b> [username/reply user] - Get id message.
+<b>ℹ️ User & Chat Info</b>
 
-<b>★ /info</b> [userID/reply user/username] - Get information about user or chat.</blockquote>
+<b>★ /id</b> [reply or @username] – Get the user's or chat’s ID.  
+<b>★ /info</b> [reply or @username/userID] – Get full info about a user or chat.
+</blockquote>
 """

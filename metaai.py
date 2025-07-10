@@ -17,12 +17,13 @@ META_AI_IMAGINE_URL = "https://api.maelyn.sbs/api/metaai/art"
 __MODULE__ = "Meta-AI"
 __HELP__ = """
 <blockquote expandable>
-**You can answer question to meta ai** 
-    <b>★ /metaai</b> (question) 
+<b>🧠 Meta AI Assistant</b>
 
-**You can generate image to meta ai** 
-    <b>★ /metaai generate</b> (prompt)</blockquote>
+<b>★ /metaai</b> (question) – Ask a question to Meta AI.  
+<b>★ /metaai generate</b> (prompt) – Generate images using Meta AI.
+</blockquote>
 """
+
 
 
 @app.on_message(filters.command(["metaai"]) & ~config.BANNED_USERS)

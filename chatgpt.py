@@ -8,11 +8,16 @@ from utils.functions import Tools #update_user_data
 from logs import LOGGER
 
 
-__MODULE__ = "ChatGpt"
+__MODULE__ = "ChatGPT"
+
 __HELP__ = """
 <blockquote expandable>
-**You can answer question to ChatGpt3** 
-    <b>★ /ask</b> (question) </blockquote>
+
+🤖 <b>Ask ChatGPT</b>
+
+• <b>/ask</b> (question) – Ask anything to ChatGPT (v3).
+
+</blockquote>
 """
 
 

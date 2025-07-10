@@ -12,13 +12,18 @@ from utils.bingtools import Bing
 from utils.decorators import Checklimit
 from utils.functions import update_user_data
 
-__MODULE__ = "Bing"
-__HELP__ = """
-<blockquote expandable>Generate image to bing image creator
+__MODULE__ = "Bing-AI"
 
-**You can generate image ai with Bingai from prompt command**
-    <b>★ /bingai</b> (prompt)</blockquote>
+__HELP__ = """
+<blockquote expandable>
+
+🖼️ <b>Bing AI Image Generator</b>
+
+• <b>/bingai</b> (prompt) – Generate an image from your text prompt using Bing AI.
+
+</blockquote>
 """
+
 
 
 @app.on_message(filters.command(["bingai", "genai"]) & ~config.BANNED_USERS)

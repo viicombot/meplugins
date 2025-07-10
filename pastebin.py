@@ -23,10 +23,14 @@ from platforms import youtube
 __MODULE__ = "Paste"
 __HELP__ = """
 <blockquote expandable>
-<b>★ /paste</b> [Text/Reply To Message] - Post text to My Pastebin.
-<b>★ /tg</b> [Text/Reply To Message] - Post text to Telegraph.
-<b>★ /upl</b> [Images] - Upload image to ImgBB.
+<b>📋 Paste Tools</b>
+
+<b>★ /paste</b> [text/reply] – Post content to MyPaste.  
+<b>★ /tg</b> [text/reply] – Post content to Telegraph.  
+<b>★ /upl</b> [image] – Upload image to ImgBB.
+</blockquote>
 """
+
 
 
 pattern = compiles(r"^text/|json$|yaml$|xml$|toml$|x-sh$|x-shellscript$|x-subrip$")

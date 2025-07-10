@@ -8,15 +8,14 @@ from utils.database import dB
 __MODULE__ = "Translate"
 __HELP__ = """
 <blockquote expandable>
-**You tranlsate text with below command** 
-    <b>★ /tr</b> (text/reply text) 
+<b>🌐 Translate Text</b>
 
-**You can view lang code to set your language for translate** 
-    <b>★ /trlang</b>
-
-**You can set lang code for your account** 
-    <b>★ /setlang</b> (lang code)</blockquote>
+<b>★ /tr</b> [text/reply] – Translate the given text.  
+<b>★ /trlang</b> – View available language codes.  
+<b>★ /setlang</b> (lang code) – Set your default translation language.
+</blockquote>
 """
+
 
 async def get_translate(chat_id):
     data = await dB.get_var(chat_id, "_translate")

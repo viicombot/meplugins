@@ -115,9 +115,9 @@ async def history(client, message):
 __MODULE__ = "SangMata"
 __HELP__ = """
 <blockquote expandable>
-**Get notification if user changed name on group** 
-    <b>★ /sangmata</b> [on/off]
+<b>🕵️‍♂️ SangMata Tracker</b>
 
-**You can get history name user** 
-    <b>★ /sg</b> (userID/reply user)</blockquote>
+<b>★ /sangmata</b> [on/off] – Enable or disable name change tracking in the group.  
+<b>★ /sg</b> [userID/reply] – View user name history.
+</blockquote>
 """

@@ -11,18 +11,20 @@ BLACKBOX_CHAT_URL = "https://api.maelyn.sbs/api/blackbox/chat"
 BLACKBOX_IMAGE_URL = "https://api.maelyn.sbs/api/blackbox/image"
 BLACKBOX_IMAGINE_URL = "https://api.maelyn.sbs/api/blackbox/imagine"
 
-__MODULE__ = "Blackbox"
+__MODULE__ = "Blackbox AI"
+
 __HELP__ = """
 <blockquote expandable>
-**You can answer question to blackbox ai** 
-    <b>★ /blackbox</b> (question) 
 
-**You can answer about image to blackbox ai** 
-    <b>★ /blackbox</b> (reply photo) (question) 
+🧠 <b>Blackbox AI Assistant</b>
 
-**You can generate image to blackbox ai** 
-    <b>★ /blackbox generate</b> (prompt)</blockquote>
+• <b>/blackbox</b> (question) – Ask any question and get answers.  
+• <b>/blackbox</b> (reply photo) (question) – Ask based on a photo.  
+• <b>/blackbox generate</b> (prompt) – Generate an image using Blackbox AI.
+
+</blockquote>
 """
+
 
 
 @app.on_message(filters.command(["blackbox"]) & ~config.BANNED_USERS)

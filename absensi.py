@@ -14,14 +14,16 @@ from core import app
 __MODULE__ = "Absensi"
 __HELP__ = """
 <blockquote expandable>
-**Show attendance for present users** 
-    <b>★ /mulai</b>
 
-**Ended attendance for present users** 
-    <b>★ /selesai</b>
+📋 <b>Attendance Commands</b>
 
-**Refresh the attendance list if the previous message is drowned out** 
-    <b>★ /refresh</b></blockquote>
+• <b>/mulai</b> – Start attendance session.  
+• <b>/selesai</b> – End the current attendance session.  
+• <b>/refresh</b> – Refresh the attendance message if it's buried.
+
+📌 <i>Use these commands in group chats to track who is present.</i>
+
+</blockquote>
 """
 
 

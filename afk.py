@@ -13,16 +13,22 @@ from utils.keyboard import Button
 from strings import command
 from utils.query_group import afk_group
 
-__MODULE__ = "Afk"
+__MODULE__ = "AFK"
+
 __HELP__ = """
 <blockquote expandable>
-<b>★ /afk</b> [reason optional] - Afk from the chat.
 
-You can use sticker/foto/video.
+💤 <b>AFK Mode</b>
 
-If you want unafk, just type any text.
-**See markdown and filling if you want costum message more.**</blockquote>
+• <b>/afk [reason]</b> – Activate AFK status with optional reason.  
+• You can also send a sticker, photo, or video to show your AFK.  
+• To disable AFK, just send any message.
+
+<i>Supports markdown & custom reply messages.</i>
+
+</blockquote>
 """
+
 
 afk_1 = ">**Unable to use the channel account.**"
 afk_2 = ">**{a} is back online and has been AFK for** `{b}`\n"

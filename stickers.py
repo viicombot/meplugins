@@ -376,15 +376,12 @@ async def gstick_cmd(client, message):
 
 __MODULE__ = "Sticker"
 __HELP__ = """
-<blockquote expandable>**Add sticker to your pack**
-    <b>★ /kang</b> (reply sticker)
+<blockquote expandable>
+<b>🎨 Sticker Tools</b>
 
-**Add pack to new your pack**
-    <b>★ /addpack</b> (reply sticker)
-
-**Delete sticker from your pack**
-    <b>★ /unkang</b> (reply sticker)
-
-**Get information from sticker with this command**
-    <b>★ /gstik</b> (reply sticker)</blockquote>
+<b>★ /kang</b> (reply) – Add a sticker to your pack.  
+<b>★ /addpack</b> (reply) – Add a sticker to a new pack.  
+<b>★ /unkang</b> (reply) – Remove a sticker from your pack.  
+<b>★ /gstik</b> (reply) – Get info from the replied sticker.
+</blockquote>
 """

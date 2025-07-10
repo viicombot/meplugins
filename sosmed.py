@@ -74,17 +74,11 @@ async def downloader_cmd(client, message):
 __MODULE__ = "Downloader"
 __HELP__ = """
 <blockquote expandable>
+<b>📥 Media Downloader</b>
 
-**You can download any media from sosial media link**
-    <b>★ /dl</b> (url)
+<b>★ /dl</b> (link) – Download media from supported platforms.
 
-**Supported links**:
-    - instagram
-    - pinterest
-    - twitter
-    - tiktok
-    - spotify
-    - threads
-    - telegram (publik channel)
-    - youtube</blockquote>
+<b>Supported sources:</b>  
+Instagram, Pinterest, Twitter, TikTok, Spotify, Threads, Telegram (public channel), YouTube
+</blockquote>
 """

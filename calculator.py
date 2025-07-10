@@ -7,10 +7,15 @@ from pyrogram.helpers import ikb
 
 
 __MODULE__ = "Calculator"
+
 __HELP__ = """
 <blockquote expandable>
-**You can get calculator inline** 
-    <b>★ /calcu</b></blockquote>
+
+🧮 <b>Inline Calculator</b>
+
+• <b>/calcu</b> – Launch interactive inline calculator.
+
+</blockquote>
 """
 
 user_calc_data = {}

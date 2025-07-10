@@ -480,34 +480,20 @@ async def qcolor_cmd(_, message):
         return await message.reply(jadi + iymek)
     
 
-
 __MODULE__ = "Quotly"
 __HELP__ = """
 <blockquote expandable>
-**You can make quote from text random color**
-    <b>★ /q</b> (reply message)
+<b>📝 Quote Generator</b>
 
-**You can make quote from text using costum color**
-    <b>★ /q pink</b> (reply message)
+<b>★ /q</b> [reply] – Quote message with random color.  
+<b>★ /q pink</b> [reply] – Quote message with custom color.  
+<b>★ /q</b> @username [reply] – Fake quote for a specific user.  
+<b>★ /q</b> @username pink -r [reply] – Fake quote with reply & color.  
+<b>★ /q</b> -r [reply] – Quote with replies.  
+<b>★ /q</b> -r pink [reply] – Quote with replies & color.  
+<b>★ /q</b> 5 [reply] – Quote multiple messages.  
+<b>★ /q</b> 5 pink [reply] – Multiple quotes with custom color.
 
-**You can make fake quote user the message with this message**
-    <b>★ /q</b> @username (reply message)
-
-**You can make fake quote user with replies and costum color**
-    <b>★ /q</b> @username pink -r (reply message)
-
-**You can make quote text with replies**
-    <b>★ /q</b> -r (reply message)
-
-**You can make quote text with replies and costum color**
-    <b>★ /q</b> -r pink (reply message)
-
-**You can make more quote text**
-    <b>★ /</b> 5 (reply message)
-
-**You can make more quote text using costum color**
-    <b>★ /q</b> 5 pink (reply message)
-    
-**Get supported color for quote**
-    <b>★ /qcolor</b></blockquote>
+<b>★ /qcolor</b> – Show all available quote colors.
+</blockquote>
 """

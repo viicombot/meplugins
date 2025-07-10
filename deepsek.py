@@ -9,12 +9,18 @@ from logs import LOGGER
 from utils import pastebin
 
 
-__MODULE__ = "Deepseek"
+__MODULE__ = "Deepseek AI"
+
 __HELP__ = """
 <blockquote expandable>
-**You can answer question to Deepseek ai** 
-    <b>★ /deepseek</b> (question) </blockquote>
+
+🧠 <b>Ask Deepseek AI</b>
+
+• <b>/deepseek</b> (question) – Ask questions and get answers from Deepseek AI.
+
+</blockquote>
 """
+
 
 
 @app.on_message(filters.command(["deepseek"]) & ~config.BANNED_USERS)

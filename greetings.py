@@ -374,27 +374,18 @@ async def leave_members(client, member):
         print(f"ERROR leave_members: {traceback.format_exc()}")
 
 
-
 __MODULE__ = "Greetings"
 __HELP__ = """
 <blockquote expandable>
-**You can set costum greetings welcome for new members joined*
-    <b>★ /setwelcome</b> (reply message)
+<b>👋 Welcome & Goodbye Messages</b>
 
-**Get welcome status** 
-    <b>★ /welcome</b>
+<b>★ /setwelcome</b> (reply) – Set a custom welcome message.  
+<b>★ /welcome</b> – Check current welcome settings.  
+<b>★ /setgoodbye</b> (reply) – Set a custom goodbye message.  
+<b>★ /goodbye</b> – Check current goodbye settings.  
+<b>★ /resetwelcome</b> – Disable the welcome message.  
+<b>★ /resetgoodbye</b> – Disable the goodbye message.
 
-**You can set costum greetings goodbye for members leaved*
-    <b>★ /setgoodbye</b>
-
-**Get goodbye status** 
-    <b>★ /goodbye</b>
-
-**You can disable greetings welcome**
-    <b>★ /resetwelcome</b>
-
-**You can disable greetings goodbye**
-    <b>★ /resetgoodbye</b>
-
-**See markdown and filling if you want costum message more.**</blockquote>
+<i>You can use markdown and fill-ins for custom messages.</i>
+</blockquote>
 """

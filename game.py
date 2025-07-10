@@ -9,21 +9,20 @@ from utils.query_group import game_group, tlirik_group, tbendera_group, tkalimat
 __MODULE__ = "Game"
 __HELP__ = """
 <blockquote expandable>
-<b>★ /asahotak</b> - Play asah otak game, test your brains.
+<b>🎮 Fun Games</b>
 
-<b>★ /tebakkalimat</b> - Play tebak kalimat game, test your brains.
+<b>★ /asahotak</b> – Play brain teaser game.  
+<b>★ /tebakkalimat</b> – Play sentence guessing game.  
+<b>★ /tekateki</b> – Play riddles game.  
+<b>★ /tebaklirik</b> – Play lyrics guessing game.  
+<b>★ /tebakbendera</b> – Play flag guessing game.  
+<b>★ /pointgame</b> – Check the top 10 game scores.
 
-<b>★ /tekateki</b> - Play teka teki game, test your brains.
-
-<b>★ /tebaklirik</b> - Play tebak lirik game, test your brains.
-
-<b>★ /tebakbendera</b> - Play tebak bendera game, test your brains.
-
-<b>★ /pointgame</b> - Check 10 top score game. 
-
-Type `nyerah` if you fool
-Type `skip-game` for next question</blockquote>
+<b>Type</b> <code>nyerah</code> to give up.  
+<b>Type</b> <code>skip-game</code> to skip the question.
+</blockquote>
 """
+
 
 chat_asah_otak = {}
 chat_tebak_lirik = {}

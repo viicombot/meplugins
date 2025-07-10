@@ -293,26 +293,33 @@ async def handle_deleter(client, message):
     await Deleter.setup_antigcast(client, message)
     await Deleter.deleter(client, message)
 
-
 __MODULE__ = "Anti-Gcast"
+
 __HELP__ = """
 <blockquote expandable>
-<b>★ /protect or /antigcast</b> [on/off] - To enable or disable antigcast.
 
-<b>★ /addblack</b> [reply user/username] - Add user to blacklist.
-<b>★ /delblack</b> [userID/username] - Delete user from blacklist.
-<b>★ /listblack</b> - To see user from blacklist database.
-<b>★ /clearblack</b> - For delete all user from blacklist database.
+🚫 <b>Global Anti-Spam Protection</b>
 
-<b>★ /free</b> [reply user/username] - Add user to whitelist.
-<b>★ /unfree</b> [userID/username] - Delete user from whitelist.
-<b>★ /listwhite</b> - To see user from whitelist database.
-<b>★ /clearwhite</b> - For delete all user from whitelist database.
+• <b>/protect</b> or <b>/antigcast</b> [on/off] – Enable or disable Gcast protection.
 
-<b>★ /bl</b> [text/reply text] - Add text to blacklist.
-<b>★ /unbl</b> - Delete text from database blacklist.
-<b>★ /listbl</b> - See text from database blacklist.
+👤 <b>User Blacklist</b>  
+• <b>/addblack</b> – Reply to a user or provide username to blacklist.  
+• <b>/delblack</b> – Remove a user from blacklist.  
+• <b>/listblack</b> – Show all blacklisted users.  
+• <b>/clearblack</b> – Clear all blacklisted users.
 
-**If admin messages are deleted by bots after enabling /antigcast on .
-Just type /reload to refresh admin list**</blockquote>
+✅ <b>User Whitelist</b>  
+• <b>/free</b> – Add a user to whitelist.  
+• <b>/unfree</b> – Remove a user from whitelist.  
+• <b>/listwhite</b> – Show all whitelisted users.  
+• <b>/clearwhite</b> – Clear all whitelisted users.
+
+📌 <b>Text Blacklist</b>  
+• <b>/bl</b> – Add keyword/phrase to blacklist.  
+• <b>/unbl</b> – Remove blacklisted text.  
+• <b>/listbl</b> – Show all blacklisted texts.
+
+<i>Note: If admin list is outdated (e.g. bot deletes admin messages), use <b>/reload</b> to refresh.</i>
+
+</blockquote>
 """
