@@ -106,7 +106,7 @@ async def add_approve(client, message):
 async def un_approve(client, message):
     reply = message.reply_to_message
     chat_id = message.chat.id
-    if reply.sender_chat:
+    if reply and reply.sender_chat:
         return await message.reply(">**Gunakan perintah ini dengan membalas pesan pengguna!! Bukan akun anonymous.**")
     try:
         target = reply.from_user.id if reply else message.text.split()[1]
@@ -169,7 +169,7 @@ async def listblack(_, message):
 async def _(client, message):
     reply = message.reply_to_message
     chat_id = message.chat.id
-    if reply.sender_chat:
+    if reply and reply.sender_chat:
         return await message.reply(">**Gunakan perintah ini dengan membalas pesan pengguna!! Bukan akun anonymous.**")
     try:
         target = reply.from_user.id if reply else message.text.split()[1]
@@ -198,7 +198,7 @@ async def _(client, message):
 async def _(client, message):
     reply = message.reply_to_message
     chat_id = message.chat.id
-    if reply.sender_chat:
+    if reply and reply.sender_chat:
         return await message.reply(">**Gunakan perintah ini dengan membalas pesan pengguna!! Bukan akun anonymous.**")
     try:
         target = reply.from_user.id if reply else message.text.split()[1]
