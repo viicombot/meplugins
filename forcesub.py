@@ -5,7 +5,7 @@ import traceback
 from core import app
 from utils.database import dB
 from utils.misc import SUDOERS
-from utis.decorators import ONLY_GROUP
+from utils.decorators import ONLY_GROUP
 
 from pyrogram import filters, errors, enums, types
 from pyrogram.helpers import ikb
