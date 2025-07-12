@@ -185,55 +185,32 @@ async def FILTERS(_, message):
             teks_formated = await Tools.escape_filter(message, teks, Tools.parse_words)
             if button:
                 reply_markup = await Button.create_inline_keyboard(button)
-                if data_type == "text":
-                    await message.reply(
-                        teks_formated,
-                        reply_markup=reply_markup,
-                        disable_web_page_preview=True,
-                        parse_mode=enums.ParseMode.HTML,
-                    )
-                else:
-                    reply_senders = {
-                        "photo": message.reply_photo,
-                        "voice": message.reply_voice,
-                        "audio": message.reply_audio,
-                        "video": message.reply_video,
-                        "animation": message.reply_animation,
-                        "document": message.reply_document,
-                        "sticker": message.reply_sticker,
-                        "video_note": message.reply_video_note,
-                    }
-                    kwargs = {"reply_to_message_id": message.id, "reply_markup": reply_markup}
-                    if data_type not in ["sticker", "video_note"]:
-                        kwargs["caption"] = teks_formated
-                        kwargs["parse_mode"] = enums.ParseMode.HTML
-
-                    await reply_senders[data_type](file_id, **kwargs)
             else:
-                if data_type == "text":
-                    await message.reply(
-                        teks_formated,
-                        disable_web_page_preview=True,
-                        parse_mode=enums.ParseMode.HTML,
-                    )
-                else:
-                    reply_senders = {
-                        "photo": message.reply_photo,
-                        "voice": message.reply_voice,
-                        "audio": message.reply_audio,
-                        "video": message.reply_video,
-                        "animation": message.reply_animation,
-                        "document": message.reply_document,
-                        "sticker": message.reply_sticker,
-                        "video_note": message.reply_video_note,
-                    }
-                    
-                    kwargs = {"reply_to_message_id": message.id}
-                    if data_type not in ["sticker", "video_note"]:
-                        kwargs["caption"] = teks_formated
-                        kwargs["parse_mode"] = enums.ParseMode.HTML
+                reply_markup = None
+            if data_type == "text":
+                await message.reply(
+                    teks_formated,
+                    reply_markup=reply_markup,
+                    disable_web_page_preview=True,
+                    parse_mode=enums.ParseMode.HTML,
+                )
+            else:
+                reply_senders = {
+                    "photo": message.reply_photo,
+                    "voice": message.reply_voice,
+                    "audio": message.reply_audio,
+                    "video": message.reply_video,
+                    "animation": message.reply_animation,
+                    "document": message.reply_document,
+                    "sticker": message.reply_sticker,
+                    "video_note": message.reply_video_note,
+                }
+                kwargs = {"reply_to_message_id": message.id, "reply_markup": reply_markup}
+                if data_type not in ["sticker", "video_note"]:
+                    kwargs["caption"] = teks_formated
+                    kwargs["parse_mode"] = enums.ParseMode.HTML
 
-                    await reply_senders[data_type](file_id, **kwargs)
+                await reply_senders[data_type](file_id, **kwargs)
     except Exception:
         LOGGER.error(
             f"Eror filter pada pesan: {message.text}\n{traceback.format_exc()}"

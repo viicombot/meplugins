@@ -281,94 +281,54 @@ async def leave_members(client, member):
         teks_formated = await Tools.escape_greetings(member, False, teks, Tools.parse_words)
         if button:
             reply_markup = await Button.create_inline_keyboard(button)
-            if data_type == "text":
-                try:
-                    await client.send_message(
-                        member.chat.id,
-                        teks_formated,
-                        reply_markup=reply_markup,
-                        disable_web_page_preview=True,
-                        parse_mode=enums.ParseMode.HTML,
-                    )
-                except errors.FloodWait as e:
-                    await asyncio.sleep(e.value)
-                    await client.send_message(
-                        member.chat.id,
-                        teks_formated,
-                        reply_markup=reply_markup,
-                        disable_web_page_preview=True,
-                        parse_mode=enums.ParseMode.HTML,
-                    )
-
-            else:
-                kwargs = {
-                    "photo": client.send_photo,
-                    "voice": client.send_voice,
-                    "audio": client.send_audio,
-                    "video": client.send_video,
-                    "animation": client.send_animation,
-                    "document": client.send_document,
-                }
-                if data_type in kwargs:
-                    try:
-                        await kwargs[data_type](
-                            member.chat.id,
-                            file_id,
-                            caption=teks_formated,
-                            parse_mode=enums.ParseMode.HTML,
-                            reply_markup=reply_markup
-                        )
-                    except errors.FloodWait as e:
-                        await asyncio.sleep(e.value)
-                        await kwargs[data_type](
-                            member.chat.id,
-                            file_id,
-                            caption=teks_formated,
-                            parse_mode=enums.ParseMode.HTML,
-                            reply_markup=reply_markup
-                        )
         else:
-            if data_type == "text":
+            reply_markup = None
+        if data_type == "text":
+            try:
+                await client.send_message(
+                    member.chat.id,
+                    teks_formated,
+                    reply_markup=reply_markup,
+                    disable_web_page_preview=True,
+                    parse_mode=enums.ParseMode.HTML,
+                )
+            except errors.FloodWait as e:
+                await asyncio.sleep(e.value)
+                await client.send_message(
+                    member.chat.id,
+                    teks_formated,
+                    reply_markup=reply_markup,
+                    disable_web_page_preview=True,
+                    parse_mode=enums.ParseMode.HTML,
+                )
+
+        else:
+            kwargs = {
+                "photo": client.send_photo,
+                "voice": client.send_voice,
+                "audio": client.send_audio,
+                "video": client.send_video,
+                "animation": client.send_animation,
+                "document": client.send_document,
+            }
+            if data_type in kwargs:
                 try:
-                    await client.send_message(
+                    await kwargs[data_type](
                         member.chat.id,
-                        teks_formated,
-                        disable_web_page_preview=True,
+                        file_id,
+                        caption=teks_formated,
                         parse_mode=enums.ParseMode.HTML,
+                        reply_markup=reply_markup
                     )
                 except errors.FloodWait as e:
                     await asyncio.sleep(e.value)
-                    await client.send_message(
+                    await kwargs[data_type](
                         member.chat.id,
-                        teks_formated,
-                        disable_web_page_preview=True,
+                        file_id,
+                        caption=teks_formated,
                         parse_mode=enums.ParseMode.HTML,
+                        reply_markup=reply_markup
                     )
-            else:
-                kwargs = {
-                    "photo": client.send_photo,
-                    "voice": client.send_voice,
-                    "audio": client.send_audio,
-                    "video": client.send_video,
-                    "animation": client.send_animation,
-                    "document": client.send_document,
-                }
-                if data_type in kwargs:
-                    try:
-                        await kwargs[data_type](
-                            member.chat.id,
-                            file_id,
-                            caption=teks_formated,
-                            parse_mode=enums.ParseMode.HTML,
-                        )
-                    except errors.FloodWait as e:
-                        await asyncio.sleep(e.value)
-                        await kwargs[data_type](
-                            member.chat.id,
-                            file_id,
-                            caption=teks_formated,
-                            parse_mode=enums.ParseMode.HTML,
-                        )
             
     except Exception:
         print(f"ERROR leave_members: {traceback.format_exc()}")

@@ -1,10 +1,12 @@
 
 
 from core import app
-from pyrogram import filters
+from pyrogram import filters, errors
 from utils.database import dB, state
 from pyrogram.types import InlineKeyboardButton as Ikb
-from pyrogram.types import InlineKeyboardMarkup, InputMediaPhoto
+from pyrogram.types import InlineKeyboardMarkup, InputMediaAnimation, InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo
+from utils.keyboard import Button
+from utils.functions import Tools
 
 
 @app.on_callback_query(filters.regex(r"^(unban|unmute)"))
@@ -33,7 +35,6 @@ async def callback_alert(client, callback_query):
     if r"\n" in alert_text:
         alert_text = alert_text.replace(r"\n", "\n")
     return await callback_query.answer(text=alert_text, show_alert=True)
-
 
 
 @app.on_callback_query(filters.regex(r"^nextpinterest_"))
@@ -71,3 +72,61 @@ async def nextpin_search(_, callback_query):
     await callback_query.edit_message_media(
         media=InputMediaPhoto(media=photos[page]), reply_markup=reply_markup
     )
+
+
+
+@app.on_callback_query(filters.regex(r"^cbnotes_"))
+async def notes_callback(client, callback_query):
+    data = callback_query.data.split("_")
+    chat_id = callback_query.message.chat.id
+    type_mapping = {
+        "photo": InputMediaPhoto,
+        "video": InputMediaVideo,
+        "animation": InputMediaAnimation,
+        "audio": InputMediaAudio,
+        "document": InputMediaDocument,
+    }
+    try:
+        notetag = data[-2].replace("cbnotes_", "")
+        print(f"Tag: {notetag}")
+        noteval = await dB.get_var(chat_id, notetag, "NOTES")
+        if not noteval:
+            await callback_query.answer("Catatan tidak ditemukan.", True)
+            return
+        
+        original_text = noteval["result"]
+        note_type = noteval["type"]
+        file_id = noteval["file_id"]
+        note, button = Button.parse_msg_buttons(original_text)
+        formatted_text = await Tools.escape_filter(callback_query.message, note, Tools.parse_words)
+        button = await Button.create_inline_keyboard(button, chat_id)
+        try:
+            if note_type == "text":
+                await callback_query.edit_message_text(
+                    text=formatted_text, reply_markup=button
+                )
+
+            elif note_type in type_mapping and file_id:
+                InputMediaType = type_mapping[note_type]
+                media = InputMediaType(media=file_id, caption=formatted_text)
+                await callback_query.edit_message_media(
+                    media=media, reply_markup=button
+                )
+
+            else:
+                await callback_query.edit_message_caption(
+                    caption=formatted_text, reply_markup=button
+                )
+
+        except errors.FloodWait as e:
+            return await callback_query.answer(
+                f"FloodWait {e}, Please Waiting!!", True
+            )
+        except errors.MessageNotModified:
+            pass
+
+    except Exception as e:
+        print(f"Error in notes callback: {str(e)}")
+        return await callback_query.answer(
+            "Terjadi kesalahan saat memproses catatan.", True
+        )
