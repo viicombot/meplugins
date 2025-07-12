@@ -333,11 +333,14 @@ async def user_info(client, message):
                     file_obj.write(chunk)
                 file_obj.name = "profile_vid_.mp4"
                 msg += "</blockquote>"
-                return await message.reply_video(
-                    video=file_obj,
-                    caption=msg,
-                    reply_markup=buttons,
-                )
+                try:
+                    return await message.reply_video(
+                        video=file_obj,
+                        caption=msg,
+                        reply_markup=buttons,
+                    )
+                except Exception:
+                    return await message.reply(msg, reply_markup=buttons)
             else:
                 file_obj = io.BytesIO()
                 async for chunk in client.stream_media(
@@ -346,11 +349,14 @@ async def user_info(client, message):
                     file_obj.write(chunk)
                 file_obj.name = "profile_pic_.jpg"
                 msg += "</blockquote>"
-                return await message.reply_photo(
-                    photo=file_obj,
-                    caption=msg,
-                    reply_markup=buttons,
-                )
+                try:
+                    return await message.reply_photo(
+                        photo=file_obj,
+                        caption=msg,
+                        reply_markup=buttons,
+                    )
+                except Exception:
+                    return await message.reply(msg, reply_markup=buttons)
         else:
             msg += "</blockquote>"
             return await message.reply(msg, reply_markup=buttons)
