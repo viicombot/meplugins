@@ -168,22 +168,22 @@ async def user_info(client, message):
                     raw.functions.users.GetFullUser(id=(await client.resolve_peer(from_user_id)))
                 )
                 if from_user:
-                    await client2.unblock_user("creationdatebot")
-                    xin = await client2.resolve_peer("creationdatebot")
-                    try:
-                        created = await interact_with(
-                            await client2.send_message(
-                                "creationdatebot", f"/id {user.id}"
-                            )
-                        )
-                        creation_date = created.text
-                    except RuntimeError:
-                        creation_date = "-"
                     interact_with_to_delete.clear()
                     small_user = from_user.users[0]
                     full_user = from_user.full_user
                     dc_id = getattr(small_user.photo, "dc_id", "-")
                     gbanned = await is_banned_user(small_user.id)
+                    await client2.unblock_user("creationdatebot")
+                    xin = await client2.resolve_peer("creationdatebot")
+                    try:
+                        created = await interact_with(
+                            await client2.send_message(
+                                "creationdatebot", f"/id {small_user.id}"
+                            )
+                        )
+                        creation_date = created.text
+                    except RuntimeError:
+                        creation_date = "-"
                     is_bot = small_user.bot
                     premium = small_user.premium
                     from_user = User._parse(client, small_user)
@@ -193,7 +193,7 @@ async def user_info(client, message):
                         )
                     )
         except Exception:
-            LOGGER.error(f"ERROR: {traceback.format_exc()}")
+            #LOGGER.error(f"ERROR: {traceback.format_exc()}")
             from_user = None
 
         if from_user is None:
@@ -206,7 +206,7 @@ async def user_info(client, message):
                 dc_id = getattr(full_user.chat_photo, "dc_id", "-")
                 from_user = Chat._parse_channel_chat(client, small_user)
             except Exception:
-                LOGGER.error(f"ERROR: {traceback.format_exc()}")
+                #LOGGER.error(f"ERROR: {traceback.format_exc()}")
                 from_user = None
 
         if not from_user:
