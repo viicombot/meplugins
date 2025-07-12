@@ -11,7 +11,7 @@ from utils.functions import Tools
 from utils.keyboard import Button
 
 
-@app.on_message(filters.command(["buttons"]) & ~config.BANNED_USERS)
+@app.on_message(filters.command(["buttons", "button"]) & ~config.BANNED_USERS)
 async def make_buttons(_, message):
     if not message.reply_to_message:
         return await message.reply(">**Please reply to message with formatted buttons.**")
