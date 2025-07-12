@@ -141,21 +141,6 @@ async def ban_cmd(client, message):
             return await message.reply_text(f">**ERROR:** {str(er)}")
         return await message.reply_text(msg, reply_markup=reply_markup)
 
-
-@app.on_callback_query(filters.regex(r"^(unban|unmute)"))
-async def callback_restrict(_, callback):
-    try:
-        query = callback.data.split("_")
-        user_id = int(query[1])
-        admins = callback.from_user.mention
-        text = "Unbanned" if query[0] == "unban" else "Unmuted"
-        await callback.message.chat.unban_member(user_id)
-        msg = f"**User {text} by** {admins}"
-        return await callback.edit_message_text(msg)
-    except Exception as err:
-        return await callback.edit_message_text(f"**ERROR:** {str(err)}")
-
-
 @app.on_message(filters.command(["mute", "delmute", "unmute"]) & ~config.BANNED_USERS)
 @ONLY_GROUP
 @ONLY_ADMIN
