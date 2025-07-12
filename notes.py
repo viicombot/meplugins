@@ -229,11 +229,6 @@ __HELP__ = """
 - Inline buttons
 
 💡 Buttons supported via format:
-<code>
-Teks utama
-
-[Button 1|https://example.com][Button 2|https://example2.com|same]
-[Button 3|https://example3.com]
-</code>
+    <i>Supports markdown & custom response formatting.</i>
 </blockquote>
 """

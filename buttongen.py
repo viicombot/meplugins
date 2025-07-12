@@ -56,14 +56,7 @@ __HELP__ = """
 **Generate buttons from text**  
 <b>★ /buttons</b> (reply to message)  
 
-**Usage**:  
-Reply ke pesan berisi teks dengan format tombol seperti ini:
-<code>
-Teks utama
-
-[Button 1|https://example.com][Button 2|https://example2.com|same]
-[Button 3|https://example3.com]
-</code>
+<i>Supports markdown & custom response formatting.</i>
 
 Bot akan otomatis membalas dengan tombol inline di bawah pesan yang sesuai.
 
