@@ -193,7 +193,7 @@ async def user_info(client, message):
                         )
                     )
         except Exception:
-            #LOGGER.error(f"ERROR: {traceback.format_exc()}")
+            LOGGER.error(f"ERROR: {traceback.format_exc()}")
             from_user = None
 
         if from_user is None:
@@ -206,7 +206,7 @@ async def user_info(client, message):
                 dc_id = getattr(full_user.chat_photo, "dc_id", "-")
                 from_user = Chat._parse_channel_chat(client, small_user)
             except Exception:
-                #LOGGER.error(f"ERROR: {traceback.format_exc()}")
+                LOGGER.error(f"ERROR: {traceback.format_exc()}")
                 from_user = None
 
         if not from_user:
