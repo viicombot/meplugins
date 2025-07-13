@@ -309,6 +309,8 @@ async def on_reaction(client, update, users, chats):
 
     peer = update.peer
     msg_id = update.msg_id
+    print(f"Peer: {peer}")
+    print(f"Msg ID: {msg_id}")
     if isinstance(peer, raw.types.PeerChannel):
         chat_id = -100 + peer.channel_id
     elif isinstance(peer, raw.types.PeerChat):
