@@ -1,7 +1,7 @@
 import traceback
 import time
 from datetime import datetime, timedelta
-from pyrogram import filters, enums
+from pyrogram import filters, enums, raw
 
 from config import BANNED_USERS
 from core import app
@@ -104,7 +104,7 @@ async def handle_afk_reply(message, afktype, user_id, user_mention, timeafk, dat
         caption = still_afk_caption(afktype, user_mention, seenago, teks_formated)
     return await reply_afk_message(message, afktype, data, caption, user_id, reply_markup)
 
-@app.on_message(filters.command("afk") & ~BANNED_USERS)
+@app.on_message(filters.command(["afk", "brb"]) & ~BANNED_USERS)
 async def active_afk(_, message):
     if message.sender_chat:
         return await message.reply_text(afk_1)
@@ -270,7 +270,7 @@ async def afk_watcher_func(client, message):
                         user = ent.user
                     if user.id == message.from_user.id:
                         continue
-                except:
+                except Exception:
                     continue
 
                 afk_data = await dB.get_var(user.id, "AFK")
@@ -292,11 +292,61 @@ async def afk_watcher_func(client, message):
     if msg:
         try:
             send = await message.reply_text(msg, disable_web_page_preview=True)
-        except:
+        except Exception:
             pass
 
     if send:
         try:
             await put_cleanmode(message.chat.id, send.id)
-        except:
+        except Exception:
             pass
+
+
+@app.on_raw_update()
+async def on_reaction(client, update, users, chats):
+    if not isinstance(update, raw.types.UpdateMessageReactions):
+        return
+
+    peer = update.peer
+    msg_id = update.msg_id
+    if isinstance(peer, raw.types.PeerChannel):
+        chat_id = -100 + peer.channel_id
+    elif isinstance(peer, raw.types.PeerChat):
+        chat_id = -peer.chat_id
+    elif isinstance(peer, raw.types.PeerUser):
+        chat_id = peer.user_id
+    else:
+        return
+
+    try:
+        msg = await client.get_messages(chat_id, msg_id)
+        if not msg or not msg.from_user:
+            return
+
+        afk_user_id = msg.from_user.id
+
+        afk_data = await dB.get_var(afk_user_id, "AFK")
+        if not afk_data:
+            return
+
+        reactors = update.reactions.recent_reactions
+        for react in reactors:
+            reactor_id = react.peer_id.user_id
+            if reactor_id == afk_user_id:
+                continue  
+
+            afk_text = await handle_afk_reply(
+                msg,
+                afk_data["type"],
+                afk_user_id,
+                msg.from_user.mention,
+                afk_data["time"],
+                afk_data["data"],
+                afk_data["reason"],
+                is_online=False,
+            )
+
+            await client.send_message(chat_id, afk_text, reply_to_message_id=msg_id)
+
+    except Exception:
+        print(traceback.format_exc())
