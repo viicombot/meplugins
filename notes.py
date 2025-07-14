@@ -74,7 +74,9 @@ async def getnote_cmd(client, message):
 @app.on_message(filters.incoming & filters.group & ~filters.bot & ~filters.via_bot & ~BANNED_USERS, group=14)
 async def getnote_cmd(client, message):
     text = message.text
-    if not text and not text.startswith("#"):
+    if not text:
+        return
+    if not text.startswith("#"):
         return
     xx = await message.reply(">**Please wait...**")
     try:
