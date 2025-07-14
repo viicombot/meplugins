@@ -75,10 +75,10 @@ async def getnote_cmd(client, message):
 async def getnote_cmd(client, message):
     xx = await message.reply(">**Please wait...**")
     try:
-        text = message.text.strip()
-        if not text or not text.startswith("#"):
+        text = message.text
+        if not text and not text.startswith("#"):
             return
-        note = text.replace("#", "")
+        note = text.strip().replace("#", "")
         data = await dB.get_var(message.chat.id, note, "NOTES")
         if not data:
             return await xx.edit(f">**Note {note} not found!**")
