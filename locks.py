@@ -538,6 +538,7 @@ async def is_approved_user(client, message):
             return True
         return False
     elif message.forward_from_chat:
+        x_chat = None
         try:
             x_chat = (await client.get_chat(message.forward_from_chat.id)).linked_chat
         except errors.ChannelPrivate:
