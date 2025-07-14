@@ -555,7 +555,7 @@ async def is_approved_user(client, message):
         return False
 
 
-@app.on_message(filters.group & ~filters.me, group=18)
+#@app.on_message(filters.group & ~filters.me, group=18)
 async def lock_del_mess(client, message):
     if message.sender_chat and not (message.forward_from_chat or message.forward_from):
         if message.sender_chat.id == message.chat.id:
