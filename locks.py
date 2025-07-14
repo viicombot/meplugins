@@ -534,7 +534,7 @@ async def is_approved_user(client, message):
         WHITELIST_USER.add(client.me.id)
 
     if message.forward_from:
-        if message.from_user.id in WHITELIST_USER:
+        if user in WHITELIST_USER:
             return True
         return False
     elif message.forward_from_chat:
