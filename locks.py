@@ -510,16 +510,6 @@ async def unlock_perm(client, message):
     return await message.reply(f">**🔒 Unlocked <b>{perm}</b> for this Chat.**")
 
 
-async def delete_messages(message):
-    try:
-        return await message.delete()
-    except errors.FloodWait as e:
-        await asyncio.sleep(e.value)
-        return await message.delete()
-    except Exception:
-        return
-
-
 async def is_approved_user(client, message):
     approved_users = await dB.get_list_from_var(message.chat.id, "APPROVED_USERS")
     chat_id = message.chat.id
@@ -565,7 +555,7 @@ async def lock_del_mess(client, message):
     if message.sender_chat and not (message.forward_from_chat or message.forward_from):
         if message.sender_chat.id == message.chat.id:
             return
-        await delete_messages(message)
+        await client.delete_messages(message.chat.id, message.id)
     is_approved = await is_approved_user(client, message)
     entity = message.entities if message.text else message.caption_entities
     if entity:
@@ -573,15 +563,15 @@ async def lock_del_mess(client, message):
             if i.type in [enums.MessageEntityType.URL or enums.MessageEntityType.TEXT_LINK]:
                 if await dB.get_var(message.chat.id, "anti_links"):
                     if not is_approved:
-                        await delete_messages(message)
+                        await client.delete_messages(message.chat.id, message.id)
     elif message.forward_from or message.forward_from_chat:
         if not is_approved:
             if await dB.get_var(message.chat.id, "anti_forwardall"):
-                await delete_messages(message)
+                await client.delete_messages(message.chat.id, message.id)
             elif (await dB.get_var(message.chat.id, "anti_forward_user") and not message.forward_from_chat):
-                await delete_messages(message)
+                await client.delete_messages(message.chat.id, message.id)
             elif (await dB.get_var(message.chat.id, "anti_forward_channel") and message.forward_from_chat):
-                await delete_messages(message)
+                await client.delete_messages(message.chat.id, message.id)
 
 
 __MODULE__ = "Locks"
