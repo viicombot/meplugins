@@ -538,7 +538,10 @@ async def is_approved_user(client, message):
             return True
         return False
     elif message.forward_from_chat:
-        x_chat = (await client.get_chat(message.forward_from_chat.id)).linked_chat
+        try:
+            x_chat = (await client.get_chat(message.forward_from_chat.id)).linked_chat
+        except errors.ChannelPrivate:
+            pass
         if user in WHITELIST_USER:
             return True
         if not x_chat:
