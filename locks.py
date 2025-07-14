@@ -262,7 +262,7 @@ async def view_locks(_, message):
     vmsg = await convert_to_emoji(v_perm.can_send_messages)
     vmedia = await convert_to_emoji(v_perm.can_send_media_messages)
     vwebprev = await convert_to_emoji(v_perm.can_add_web_page_previews)
-    vstickers = convert_to_emoji(v_perm.can_send_stickers)
+    vstickers = await convert_to_emoji(v_perm.can_send_stickers)
     vpolls = await convert_to_emoji(v_perm.can_send_polls)
     vinfo = await convert_to_emoji(v_perm.can_change_info)
     vinvite = await convert_to_emoji(v_perm.can_invite_users)
