@@ -167,7 +167,7 @@ async def cc_cmd(client, message):
 @app.on_message(filters.command(["cekmember"]) & ~config.BANNED_USERS)
 async def cekmember_cmd(client, message):
     chat_id = message.chat.id if len(message.command) < 2 else message.text.split()[1]
-    proses = await message.reply(">**Please wait...*")
+    proses = await message.reply(">**Please wait...**")
     try:
         member_count = await client.get_chat_members_count(chat_id)
         await asyncio.sleep(1)

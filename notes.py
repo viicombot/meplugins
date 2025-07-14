@@ -42,32 +42,48 @@ async def addnote_cmd(_, message):
         return await xx.edit(f">**Please reply message and give note name**")
 
 
-@app.on_message(filters.command(["getnote", "get"]) & ~BANNED_USERS)
+@app.on_message(filters.incoming & filters.group & ~filters.bot & ~filters.via_bot & ~BANNED_USERS, group=14)
 async def getnote_cmd(client, message):
     xx = await message.reply(">**Please wait...**")
     try:
-        if len(message.text.split()) == 2:
-            note = message.text.split()[1]
+        text = message.text.strip()
+        if not text:
+            return
+
+        if text.startswith("/get"):
+            parts = text.split()
+            if len(parts) == 2:
+                note = parts[1]
+                data = await dB.get_var(message.chat.id, note, "NOTES")
+                if not data:
+                    return await xx.edit(f">**Note {note} not found!**")
+                return await get_notes(client, message, xx, data)
+            
+            elif len(parts) == 3 and parts[2] in ["noformat", "raw"]:
+                note = parts[1]
+                data = await dB.get_var(message.chat.id, note, "NOTES")
+                if not data:
+                    return await xx.edit(f">**Note {note} not found!**")
+                return await get_raw_note(client, message, xx, data)
+
+            else:
+                return await xx.edit(
+                    f">**Please valid command.\nExample: `/get nama_catatan noformat`**"
+                )
+
+        elif text.startswith("#") and len(text.split()) == 1:
+            note = text[1:]
             data = await dB.get_var(message.chat.id, note, "NOTES")
             if not data:
                 return await xx.edit(f">**Note {note} not found!**")
             return await get_notes(client, message, xx, data)
-        
-        elif len(message.text.split()) == 3 and (message.text.split())[2] in [
-            "noformat",
-            "raw",
-        ]:
-            note = message.text.split()[1]
-            data = await dB.get_var(message.chat.id, note, "NOTES")
-            if not data:
-                return await xx.edit(f">**Note {note} not found!**")
-            return await get_raw_note(client, message, xx, data)
+
         else:
-            return await xx.edit(
-                f">**Please valid command.\nExample: `{message.text.split()[0]} ciah noformat`.**"
-            )
+            return await xx.edit(">**Invalid format. Use `/get note` or `#note`.**")
+
     except Exception as e:
         return await xx.edit(f">**ERROR**: {str(e)}")
+
 
 
 async def get_notes(_, message, xx, data):
@@ -169,7 +185,7 @@ async def notes_cmd(_, message):
     rply = f">**List of Notes:**\n\n"
     for x, data in getnotes.items():
         type = await dB.get_var(message.chat.id, x, "NOTES")
-        rply += f"**• Name: `{x}` | Type: `{type['type']}`**\n"
+        rply += f"**• Name: `#{x}` | Type: `{type['type']}`**\n"
     return await xx.edit(rply)
 
 @app.on_message(filters.command(["clearnote", "delnote"]) & ~BANNED_USERS)

@@ -89,12 +89,20 @@ async def promote_cmd(client, message):
                     can_pin_messages=True,
                     is_anonymous=False,
                 )
-                await client.promote_chat_member(
-                    chat_id=message.chat.id,
-                    user_id=user_id,
-                    privileges=privileges,
-                    title=title,
-                )
+                try:
+                    await client.promote_chat_member(
+                        chat_id=message.chat.id,
+                        user_id=user_id,
+                        privileges=privileges,
+                        title=title,
+                    )
+                except errors.AdminRankEmojiNotAllowed:
+                    await client.promote_chat_member(
+                        chat_id=message.chat.id,
+                        user_id=user_id,
+                        privileges=privileges,
+                        title="Anak Kambing",
+                    )
                 return await message.reply_text(
                     f"><b>Successfully promoted user {user.mention} to admin!</b>"
                 )

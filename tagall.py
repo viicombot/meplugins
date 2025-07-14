@@ -110,7 +110,7 @@ async def cancel_tagall(_, message):
 
 
 
-@app.on_message(filters.command(["tagadmins", "admins"]) & ~config.BANNED_USERS)
+@app.on_message(filters.command(["tagadmins"]) & ~config.BANNED_USERS)
 @ONLY_GROUP
 @ONLY_ADMIN
 async def tagadmins_cmd(client, message):

@@ -27,7 +27,7 @@ __HELP__ = """
 
 <b>★ /paste</b> [text/reply] – Post content to MyPaste.  
 <b>★ /tg</b> [text/reply] – Post content to Telegraph.  
-<b>★ /upl</b> [image] – Upload image to ImgBB.
+<b>★ /upl</b> [image] – Upload image to catbox.
 </blockquote>
 """
 
@@ -157,13 +157,13 @@ async def wastepaste(_, message):
 
 
 # ImgBB Upload
-@app.on_message(filters.command(["imgbb", "upl"]) & ~config.BANNED_USERS)
+@app.on_message(filters.command(["upl", "catbox"]) & ~config.BANNED_USERS)
 async def imgbb_upload(_, message):
     try:
         reply = message.reply_to_message
         if not reply and len(message.command) == 1:
             return await message.reply(
-                f"**Reply to a photo with /{message.command[0]} command to upload image on ImgBB.**", del_in=6
+                f"**Reply to a photo with /{message.command[0]} command to upload image on catbox.**", del_in=6
             )
         if not (reply.photo or (reply.document and reply.document.mime_type.startswith("image"))):
             return await message.reply("This command only support upload photo")
@@ -179,15 +179,8 @@ async def imgbb_upload(_, message):
             uname = message.sender_chat.title
 
         try:
-            path = await reply.download()
-            data = {"type": "file", "action": "upload"}
-            files = {"source": (path, open(path, "rb"), "images/jpeg")}
-            headers = {"origin": "https://imgbb.com", "referer": "https://imgbb.com/upload", "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.42"}
-            res = await Tools.fetch.post("https://imgbb.com/json", files=files, data=data, headers=headers)
-            remove(path)
-            url = f"https://ibb.co.com/{res.json()['image']['id_encoded']}"
-            button = ikb([[("Open Link", f"{url}", "url")], [("Share Link", f"https://telegram.me/share/url?url={url}", "url")]])
-        
+            url = await Tools.upload_media(message)
+            button = ikb([[("Open Link", f"{url}", "url")], [("Share Link", f"https://telegram.me/share/url?url={url}", "url")]])        
             pasted = f"**Successfully pasted your images to ImgBB<a href='{url}'>.</a>\n\nPaste by {uname}**"
             return await msg.edit(pasted, reply_markup=button, disable_web_page_preview=True)
         except Exception as e:
