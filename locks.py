@@ -513,6 +513,7 @@ async def unlock_perm(client, message):
 async def is_approved_user(client, message):
     approved_users = await dB.get_list_from_var(message.chat.id, "APPROVED_USERS")
     chat_id = message.chat.id
+    user = message.from_user.id if message.from_user else message.sender_chat.id
     if config.adminlist.get(message.chat.id) is None:
         async for member in client.get_chat_members(
                 chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS
@@ -538,14 +539,14 @@ async def is_approved_user(client, message):
         return False
     elif message.forward_from_chat:
         x_chat = (await client.get_chat(message.forward_from_chat.id)).linked_chat
-        if message.from_user.id in WHITELIST_USER:
+        if user in WHITELIST_USER:
             return True
         if not x_chat:
             return False
         elif x_chat and x_chat.id == message.chat.id:
             return True
     elif message.from_user:
-        if message.from_user.id in WHITELIST_USER:
+        if user in WHITELIST_USER:
             return True
         return False
 
