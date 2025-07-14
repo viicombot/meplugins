@@ -268,23 +268,23 @@ async def view_locks(_, message):
     vinvite = await convert_to_emoji(v_perm.can_invite_users)
     vpin = await convert_to_emoji(v_perm.can_pin_messages)
 
-    vgifs = convert_to_emoji(v_perm.can_send_gifs)
-    vgames = convert_to_emoji(v_perm.can_send_games)
-    vinline = convert_to_emoji(v_perm.can_send_inline)
-    vtopic = convert_to_emoji(v_perm.can_manage_topics)
-    vaudio = convert_to_emoji(v_perm.can_send_audios)
-    vdocument = convert_to_emoji(v_perm.can_send_docs)
-    vphoto = convert_to_emoji(v_perm.can_send_photos)
-    vplain = convert_to_emoji(v_perm.can_send_plain)
-    vvideo_note = convert_to_emoji(v_perm.can_send_roundvideos)
-    vvideo = convert_to_emoji(v_perm.can_send_videos)
-    vvoice = convert_to_emoji(v_perm.can_send_voices)
+    vgifs = await convert_to_emoji(v_perm.can_send_gifs)
+    vgames = await convert_to_emoji(v_perm.can_send_games)
+    vinline = await convert_to_emoji(v_perm.can_send_inline)
+    vtopic = await convert_to_emoji(v_perm.can_manage_topics)
+    vaudio = await convert_to_emoji(v_perm.can_send_audios)
+    vdocument = await convert_to_emoji(v_perm.can_send_docs)
+    vphoto = await convert_to_emoji(v_perm.can_send_photos)
+    vplain = await convert_to_emoji(v_perm.can_send_plain)
+    vvideo_note = await convert_to_emoji(v_perm.can_send_roundvideos)
+    vvideo = await convert_to_emoji(v_perm.can_send_videos)
+    vvoice = await convert_to_emoji(v_perm.can_send_voices)
 
     vanon = await convert_to_emoji(anon)
     vanti = await convert_to_emoji(anti_f)
     vantiu = await convert_to_emoji(anti_f_u)
     vantic = await convert_to_emoji(anti_f_c)
-    await convert_to_emoji(antil)
+    vantil = await convert_to_emoji(antil)
 
     if v_perm is not None:
         try:
@@ -318,7 +318,7 @@ async def view_locks(_, message):
 <b>Can forward:</b> {vanti}
 <b>Can forward from user:</b> {vantiu}
 <b>Can forward from channel and chats:</b> {vantic}
-<b>Can send links:</b> {antil}</blockquote>
+<b>Can send links:</b> {vantil}</blockquote>
 """
             return await chkmsg.edit(permission_view_str)
 
