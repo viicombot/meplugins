@@ -73,11 +73,11 @@ async def getnote_cmd(client, message):
 
 @app.on_message(filters.incoming & filters.group & ~filters.bot & ~filters.via_bot & ~BANNED_USERS, group=14)
 async def getnote_cmd(client, message):
+    text = message.text
+    if not text and not text.startswith("#"):
+        return
     xx = await message.reply(">**Please wait...**")
     try:
-        text = message.text
-        if not text and not text.startswith("#"):
-            return
         note = text.strip().replace("#", "")
         data = await dB.get_var(message.chat.id, note, "NOTES")
         if not data:
