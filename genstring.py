@@ -54,7 +54,7 @@ Then you'll be guided through steps to:
 
 
 gen_button = ikb([[("⚙️ Generate Session", "genstringcb")]])
-chose_button = ikb([[("Telethon", "telethoncb"), ("Pyrogram V2", "pyrogramcb")][("❎ Close", "close")]])
+chose_button = ikb([[("Telethon", "telethoncb"), ("Pyrogram V2", "pyrogramcb")], [("❎ Close", "close")]])
 
 
 async def cancelled(message):
