@@ -66,8 +66,8 @@ async def cancelled(message):
 
 @app.on_callback_query(filters.regex(r"^(genstringcb|pyrogramcb|telethoncb)$") & ~config.BANNED_USERS)
 async def cb_choose(client, callback):
-    await callback.answer()
     query = callback.data
+    print(query)
     try:
         if query[0] == "genstringcb":
             return await callback.edit_message_text("<b>Choose the string that you want to generate:</b>", reply_markup=chose_button)
