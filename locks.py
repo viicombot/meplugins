@@ -30,10 +30,6 @@ l_t = """<blockquote expandable>
 - `video_note` = Video Note
 - `video` = Video
 - `voice` = Voice Messages
-- `anonchannel` = Send as chat will be locked
-- `forwardall` = Forwarding from channel and user
-- `forwardu` = Forwarding from user
-- `forwardc` = Forwarding from channel
 - `links | url` = Lock links</blockquote>"""
 
 
@@ -660,10 +656,6 @@ plain - Plain text
 video_note - Video notes
 video - Videos
 voice - Voice messages
-anonchannel - Send as channel
-forwardall - Forwards from all sources
-forwardu - Forwards from users
-forwardc - Forwards from channels
 links | url - Web links
 </code>
 
