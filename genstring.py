@@ -66,7 +66,6 @@ async def cancelled(message):
 @app.on_callback_query(filters.regex(r"^(pyrogramcb|telethoncb)") & ~config.BANNED_USERS)
 async def cb_choose(client, callback):
     query = callback.data
-    print(query)
     try:
         if query == "pyrogramcb":
             await gen_session(client, callback.message, callback.from_user.id)
@@ -119,9 +118,6 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             ty = f"Telethon"
         else:
             ty = f"Pyrogram V2"
-        await message.reply(
-            f">Starting Generating {ty} Sessions... \n/cancel To cancel the Generate Process"
-        )
 
         try:
             api_id = await client.ask(
