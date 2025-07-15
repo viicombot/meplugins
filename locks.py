@@ -510,49 +510,100 @@ async def unlock_perm(client, message):
     return await message.reply(f">**🔒 Unlocked <b>{perm}</b> for this Chat.**")
 
 
+# async def is_approved_user(client, message):
+#     approved_users = await dB.get_list_from_var(message.chat.id, "APPROVED_USERS")
+#     chat_id = message.chat.id
+#     user = message.from_user.id if message.from_user else message.sender_chat.id
+#     if config.adminlist.get(message.chat.id) is None:
+#         async for member in client.get_chat_members(
+#                 chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS
+#             ):
+#                 WHITELIST_USER.add(member.user.id)
+#                 for a in approved_users:
+#                     WHITELIST_USER.add(a)
+#                 for b in SUDOERS:
+#                     WHITELIST_USER.add(b)
+#                 WHITELIST_USER.add(client.me.id)
+#     else:
+#         for a in config.adminlist.get(message.chat.id):
+#             WHITELIST_USER.add(a)
+#         for b in approved_users:
+#             WHITELIST_USER.add(b)
+#         for c in SUDOERS:
+#             WHITELIST_USER.add(c)
+#         WHITELIST_USER.add(client.me.id)
+# 
+#     if message.forward_from:
+#         if user in WHITELIST_USER:
+#             return True
+#         return False
+#     elif message.forward_from_chat:
+#         x_chat = None
+#         try:
+#             x_chat = (await client.get_chat(message.forward_from_chat.id)).linked_chat
+#         except errors.ChannelPrivate:
+#             pass
+#         if user in WHITELIST_USER:
+#             return True
+#         if not x_chat:
+#             return False
+#         elif x_chat and x_chat.id == message.chat.id:
+#             return True
+#     elif message.from_user:
+#         if user in WHITELIST_USER:
+#             return True
+#         return False
+
+
 async def is_approved_user(client, message):
-    approved_users = await dB.get_list_from_var(message.chat.id, "APPROVED_USERS")
     chat_id = message.chat.id
-    user = message.from_user.id if message.from_user else message.sender_chat.id
-    if config.adminlist.get(message.chat.id) is None:
+    user = message.from_user.id if message.from_user else (
+        message.sender_chat.id if message.sender_chat else None
+    )
+
+    if user is None:
+        return False
+
+    approved_users = await dB.get_list_from_var(chat_id, "APPROVED_USERS")
+    whitelist = set()
+
+    if config.adminlist.get(chat_id) is None:
         async for member in client.get_chat_members(
-                chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS
-            ):
-                WHITELIST_USER.add(member.user.id)
-                for a in approved_users:
-                    WHITELIST_USER.add(a)
-                for b in SUDOERS:
-                    WHITELIST_USER.add(b)
-                WHITELIST_USER.add(client.me.id)
+            chat_id, filter=enums.ChatMembersFilter.ADMINISTRATORS
+        ):
+            if member.user:
+                whitelist.add(member.user.id)
+        config.adminlist[chat_id] = list(whitelist)
     else:
-        for a in config.adminlist.get(message.chat.id):
-            WHITELIST_USER.add(a)
-        for b in approved_users:
-            WHITELIST_USER.add(b)
-        for c in SUDOERS:
-            WHITELIST_USER.add(c)
-        WHITELIST_USER.add(client.me.id)
+        whitelist.update(config.adminlist.get(chat_id, []))
+
+    whitelist.update(approved_users)
+    whitelist.update(SUDOERS)
+    whitelist.add(client.me.id)
 
     if message.forward_from:
-        if user in WHITELIST_USER:
-            return True
-        return False
+        return user in whitelist
+
     elif message.forward_from_chat:
         x_chat = None
         try:
-            x_chat = (await client.get_chat(message.forward_from_chat.id)).linked_chat
+            chat_info = await client.get_chat(message.forward_from_chat.id)
+            x_chat = getattr(chat_info, "linked_chat", None)
         except errors.ChannelPrivate:
             pass
-        if user in WHITELIST_USER:
+        except Exception:
+            pass
+
+        if user in whitelist:
             return True
-        if not x_chat:
-            return False
-        elif x_chat and x_chat.id == message.chat.id:
-            return True
-    elif message.from_user:
-        if user in WHITELIST_USER:
+        if x_chat and getattr(x_chat, "id", None) == chat_id:
             return True
         return False
+
+    elif message.from_user:
+        return user in whitelist
+
+    return False
 
 
 #@app.on_message(filters.group & ~filters.me, group=18)
