@@ -3,4 +3,3 @@ telegraph
 navygram
 telethon
 git+https://github.com/naya1503/hydrogram@dev
-git+https://github.com/navycodes/pyromod@master

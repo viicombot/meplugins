@@ -23,7 +23,7 @@ from telethon.tl.functions.channels import JoinChannelRequest
 
 from core import app
 
-from pyromod import listen #ignore
+
 
 __MODULE__ = "String-Gen"
 __HELP__ = """
