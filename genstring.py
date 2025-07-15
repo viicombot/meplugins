@@ -64,7 +64,7 @@ async def cancelled(message):
     else:
         return False
 
-@app.on_callback_query(filters.regex(r"^(genstringcb|pyrogramcb|telethoncb)$") & ~config.BANNED_USERS)
+@app.on_callback_query(filters.regex(r"^(genstringcb|pyrogramcb|telethoncb)") & ~config.BANNED_USERS)
 async def cb_choose(client, callback):
     query = callback.data
     print(query)
