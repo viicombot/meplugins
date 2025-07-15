@@ -53,25 +53,22 @@ Then you'll be guided through steps to:
 """
 
 
-gen_button = ikb([[("⚙️ Generate Session", "genstringcb")]])
 chose_button = ikb([[("Telethon", "telethoncb"), ("Pyrogram V2", "pyrogramcb")], [("❎ Close", "close")]])
 
 
 async def cancelled(message):
     if message.text.startswith("/"):
-        await message.reply_text(">Cancelled the ongoing process.", reply_markup=gen_button)
+        await message.reply_text(">Cancelled the ongoing process.", reply_markup=chose_button)
         return True
     else:
         return False
 
-@app.on_callback_query(filters.regex(r"^(genstringcb|pyrogramcb|telethoncb)") & ~config.BANNED_USERS)
+@app.on_callback_query(filters.regex(r"^(pyrogramcb|telethoncb)") & ~config.BANNED_USERS)
 async def cb_choose(client, callback):
     query = callback.data
     print(query)
     try:
-        if query[0] == "genstringcb":
-            return await callback.edit_message_text("<b>Choose the string that you want to generate:</b>", reply_markup=chose_button)
-        elif query[0] == "pyrogramcb":
+        if query[0] == "pyrogramcb":
             await gen_session(client, callback.message, callback.from_user.id)
         elif query[0] == "telethoncb":
             await gen_session(client, callback.message, callback.from_user.id, telethon=True)
@@ -90,7 +87,7 @@ Bot to help you generate your string session, i can generate Pyrogram and Teleth
 
 Developed by @{config.OWNER_ANKES}
 """,
-        reply_markup=gen_button)
+        reply_markup=chose_button)
 
 
 
@@ -137,7 +134,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">Time limit reached of 5 minutes.\n\nPlease start generating session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
 
         if await cancelled(api_id):
@@ -149,7 +146,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">The Api_id is invalid.\n\nPlease start generating session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
 
         try:
@@ -163,7 +160,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">Time limit reached of 5 minutes.\n\nPlease start generating session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
 
         api_hash = api_hash.text
@@ -172,7 +169,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">The Api_hash is invalid.\n\nPlease start generating session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
 
         try:
@@ -201,7 +198,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">Time limit reached of 5 minutes.\n\nPlease start generating session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
         phone_number = phone.contact.phone_number
 
@@ -233,7 +230,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 f">Failed to send the code to you account.\n\nPlease wait for {f.value or f.x} seconds and try again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
         except (
             hydrogram.errors.exceptions.bad_request_400.ApiIdInvalid,
@@ -242,7 +239,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">The combination of Api_id and Api_hash is invalid.\n\nPlease start generating your session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
         except (
             hydrogram.errors.exceptions.bad_request_400.PhoneNumberInvalid,
@@ -251,7 +248,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">The Phone number is invalid.\n\nPlease start generating your session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
 
         try:
@@ -267,7 +264,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">Time limit reached of 10 minutes.\n\nPlease start generating your session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
 
         otp = otp.text.replace(" ", "")
@@ -283,7 +280,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">The OTP you send is <b>Wrong.</b>\n\nPlease start generating your session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
         except (
             hydrogram.errors.exceptions.bad_request_400.PhoneCodeExpired,
@@ -292,7 +289,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
             return await client.send_message(
                 user_id,
                 ">The OTP you send is <b>expired.</b>Make sure you send the otp with the right format.\n\nPlease start generating your session again.",
-                reply_markup=gen_button,
+                reply_markup=chose_button,
             )
         except (
             hydrogram.errors.exceptions.unauthorized_401.SessionPasswordNeeded,
@@ -309,7 +306,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
                 return client.send_message(
                     user_id,
                     ">Time limit reached of 5 minutes.\n\nPlease start generating session again.",
-                    reply_markup=gen_button,
+                    reply_markup=chose_button,
                 )
 
             if await cancelled(pwd):
@@ -328,7 +325,7 @@ async def gen_session(client, message, user_id: int, telethon: bool = False):
                 return await client.send_message(
                     user_id,
                     ">The password is wrong.\n\nPlease start generating session again.",
-                    reply_markup=gen_button,
+                    reply_markup=chose_button,
                 )
 
         except Exception as ex:
