@@ -68,9 +68,9 @@ async def cb_choose(client, callback):
     query = callback.data
     print(query)
     try:
-        if query[0] == "pyrogramcb":
+        if query == "pyrogramcb":
             await gen_session(client, callback.message, callback.from_user.id)
-        elif query[0] == "telethoncb":
+        elif query == "telethoncb":
             await gen_session(client, callback.message, callback.from_user.id, telethon=True)
     except Exception:
         print(f"ERROR: {traceback.format_exc()}")
