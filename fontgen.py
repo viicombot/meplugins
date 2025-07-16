@@ -110,10 +110,10 @@ PAGE_2 = [
 @app.on_message(filters.command(["font", "fonts"]) & ~BANNED_USERS)
 async def show_fonts(_, message):
     text = message.reply_to_message.text or message.reply_to_message.caption
-    if not message.reply_to_message or not text:
+    if not message.reply_to_message:
         return await message.reply(">**Reply to a message containing text to apply font style.**")
     return await message.reply(
-        message.reply_to_message.text,
+        text,
         reply_markup=InlineKeyboardMarkup(PAGE_1)
     )
 
