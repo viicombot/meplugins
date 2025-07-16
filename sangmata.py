@@ -15,7 +15,7 @@ from utils.decorators import ONLY_ADMIN, ONLY_GROUP
     group=sangmata_group,
 )
 async def sang_mata(client, message):
-    if message.sender_chat or await dB.get_var(message.chat.id, "SICEPU"):
+    if message.sender_chat:
         return
 
     user_id = message.from_user.id
@@ -36,6 +36,8 @@ async def sang_mata(client, message):
     old_username = data["username"]
 
     changes = []
+    if await dB.get_var(message.chat.id, "SICEPU"):
+        return
 
     if old_username != username:
         old_u = f"@{old_username}" if old_username else "<b>Tanpa Username</b>"
@@ -76,10 +78,10 @@ async def sangmata_cmd(client, message):
             await dB.remove_var(message.chat.id, "SICEPU")
             return await message.reply_text(">**Sangmata berhasil diaktifkan.**")
     else:
-        if await dB.get_var(message.chat.id, "SICEPU"):
+        if not await dB.get_var(message.chat.id, "SICEPU"):
             return await message.reply_text(">**Sangmata sudah dinonaktifkan**")
         else:
-            await dB.remove_var(message.chat.id, "SICEPU")
+            await dB.set_var(message.chat.id, "SICEPU", True)
             return await message.reply_text(">**Sangmata berhasil dinonaktifkan.**")
 
 
