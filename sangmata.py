@@ -74,15 +74,13 @@ async def sangmata_cmd(client, message):
     if state == "on":
         if not await dB.get_var(message.chat.id, "SICEPU"):
             return await message.reply_text(">**Sangmata sudah diaktifkan**")
-        else:
-            await dB.remove_var(message.chat.id, "SICEPU")
-            return await message.reply_text(">**Sangmata berhasil diaktifkan.**")
+        await dB.remove_var(message.chat.id, "SICEPU")
+        return await message.reply_text(">**Sangmata berhasil diaktifkan.**")
     else:
-        if not await dB.get_var(message.chat.id, "SICEPU"):
+        if await dB.get_var(message.chat.id, "SICEPU"):
             return await message.reply_text(">**Sangmata sudah dinonaktifkan**")
-        else:
-            await dB.set_var(message.chat.id, "SICEPU", True)
-            return await message.reply_text(">**Sangmata berhasil dinonaktifkan.**")
+        await dB.set_var(message.chat.id, "SICEPU", True)
+        return await message.reply_text(">**Sangmata berhasil dinonaktifkan.**")
 
 
 @app.on_message(filters.command(["sg"]) & ~config.BANNED_USERS)
