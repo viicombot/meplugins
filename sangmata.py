@@ -79,7 +79,7 @@ async def sangmata_cmd(client, message):
         if await dB.get_var(message.chat.id, "SICEPU"):
             return await message.reply_text(">**Sangmata sudah dinonaktifkan**")
         else:
-            await dB.set_var(message.chat.id, "SICEPU", False)
+            await dB.remove_var(message.chat.id, "SICEPU")
             return await message.reply_text(">**Sangmata berhasil dinonaktifkan.**")
 
 
